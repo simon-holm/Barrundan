@@ -8,7 +8,7 @@ import Slides from '../components/Slides'
 const SLIDE_DATA = [
   { text: 'Välkommen till Barrundan', color: '#03A9F4' },
   {
-    text: 'En ny runda varje dag',
+    text: 'En ny runda varje vecka',
     color: '#009688'
   },
   { text: 'Aldrig mer full ensam', color: '#03A9F4' },
@@ -23,7 +23,7 @@ class WelcomeScreen extends Component {
     let token = await AsyncStorage.getItem('fb_token')
 
     if (token) {
-      this.props.navigation.navigate('first')
+      this.props.navigation.navigate('rundan')
     } else {
       this.setState({ token: false })
     }

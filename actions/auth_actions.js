@@ -1,18 +1,22 @@
 import { AsyncStorage } from 'react-native'
 import { Facebook } from 'expo'
-import { FACEBOOK_LOGIN_SUCCESS, FACEBOOK_LOGIN_FAIL } from './types'
+import {
+  FACEBOOK_LOGIN_SUCCESS,
+  FACEBOOK_LOGIN_FAIL,
+  REMOVE_FB_TOKEN
+} from './types'
 
-// AsyncStorage är promised based. såå assyyyyync aawaiiiit
+// AsyncStorage tar lite tid och är promised based. såå async await
 
 export const facebookLogin = () => async dispatch => {
-  //see if token exists
+  //Kolla om token finns redan
   let token = await AsyncStorage.getItem('fb_token')
 
   if (token) {
-    // Dispatch action FB login is done
+    // Dispatch action FB login är klart
     dispatch({ type: FACEBOOK_LOGIN_SUCCESS, payload: token })
   } else {
-    // Start up FB Login process
+    // Starta upp FB Login processen
     doFacebookLogin(dispatch)
   }
 }
@@ -31,4 +35,9 @@ const doFacebookLogin = async dispatch => {
 
   await AsyncStorage.setItem('fb_token', token)
   dispatch({ type: FACEBOOK_LOGIN_SUCCESS, payload: token })
+}
+
+export const removeToken = () => async dispatch => {
+  await AsyncStorage.removeItem('fb_token')
+  dispatch({ type: REMOVE_FB_TOKEN })
 }

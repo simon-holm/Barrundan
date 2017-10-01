@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Button, View, Text, ScrollView, Dimensions } from 'react-native'
-//import { Button } from 'react-native-elements'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
