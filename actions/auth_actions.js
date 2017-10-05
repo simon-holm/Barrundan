@@ -1,9 +1,11 @@
+import axios from 'axios'
 import { AsyncStorage } from 'react-native'
 import { Facebook } from 'expo'
 import {
   FACEBOOK_LOGIN_SUCCESS,
   FACEBOOK_LOGIN_FAIL,
-  REMOVE_FB_TOKEN
+  REMOVE_FB_TOKEN,
+  SET_JWT
 } from './types'
 
 // AsyncStorage tar lite tid och är promised based. såå async await
@@ -39,5 +41,30 @@ const doFacebookLogin = async dispatch => {
 
 export const removeToken = () => async dispatch => {
   await AsyncStorage.removeItem('fb_token')
+  await AsyncStorage.removeItem('jwt')
   dispatch({ type: REMOVE_FB_TOKEN })
+}
+
+// Barrundan API SKAPA USER => FÅ JWT
+export const barrundanCreateUser = () => async dispatch => {
+  let fbToken = await AsyncStorage.getItem('fb_token')
+
+  let { data } = await axios
+    .post(
+      'http://192.168.0.4:3070/user',
+      {
+        token: fbToken
+      },
+      {
+        Accept: 'application/json',
+        Authorization: 'Bearer ',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    )
+    .catch(e => console.log(e))
+
+  const token = data.token
+  await AsyncStorage.setItem('jwt', token)
+
+  dispatch({ type: SET_JWT, payload: token })
 }
