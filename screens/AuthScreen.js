@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text, AsyncStorage } from 'react-native'
+import { View, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 
 import * as actions from '../actions'
 
@@ -11,12 +12,18 @@ class AuthScreen extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // har vi fått ett facebook token men jwt är null
+    // så måste vi skapa user i barrundan databas
+    if (nextProps.token && _.isNull(nextProps.jwt)) {
+      return this.props.barrundanCreateUser()
+    }
     this.onAuthComplete(nextProps)
   }
 
   onAuthComplete(props) {
-    if (props.token) {
-      this.props.navigation.navigate('first')
+    // finns både facebook token och jwt så är vi välkomna in
+    if (props.token && props.jwt) {
+      this.props.navigation.navigate('rundan')
     }
   }
 
@@ -26,7 +33,7 @@ class AuthScreen extends Component {
 }
 
 function mapStateToProps({ auth }) {
-  return { token: auth.token }
+  return { token: auth.token, jwt: auth.jwt }
 }
 
 export default connect(mapStateToProps, actions)(AuthScreen)

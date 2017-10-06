@@ -11,7 +11,7 @@ const SLIDE_DATA = [
     text: 'En ny runda varje vecka',
     color: '#009688'
   },
-  { text: 'Aldrig mer full ensam', color: '#03A9F4' },
+  { text: 'Aldrig mer kröka alena', color: '#03A9F4' },
   { text: 'Här kan det stå nått intressant, kanske en bild', color: '#009688' },
   { text: 'Här är sista slajden, Nu till FacebookLogin', color: '#03A9F4' }
 ]
@@ -21,8 +21,9 @@ class WelcomeScreen extends Component {
 
   async componentWillMount() {
     let token = await AsyncStorage.getItem('fb_token')
+    let jwt = await AsyncStorage.getItem('jwt')
 
-    if (token) {
+    if (token && jwt) {
       this.props.navigation.navigate('rundan')
     } else {
       this.setState({ token: false })

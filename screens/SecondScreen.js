@@ -28,6 +28,25 @@ class MapScreen extends Component {
       .then(response => this.setState({ fbData: response.data }))
   }
 
+  //BARA TEST TA BORT SEN
+  testBarrundanCreateUser = async token => {
+    console.log('testbarrundna med token', token)
+    let { data } = await axios
+      .post(
+        'http://192.168.0.4:3070/user',
+        {
+          token
+        },
+        {
+          Accept: 'application/json',
+          Authorization: 'Bearer ',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      )
+      .catch(e => console.log(e))
+    console.log(data)
+  }
+
   render() {
     const { container, text } = styles
 
@@ -37,7 +56,7 @@ class MapScreen extends Component {
           <View>
             <Text style={text}>NU INLOGGAD</Text>
             <Button
-              title="Ta bort FB_TOKEN"
+              title="Ta bort FB_TOKEN & JWT"
               onPress={() => this.props.removeToken()}
             />
             <Button
@@ -54,6 +73,11 @@ class MapScreen extends Component {
                 <Text style={text}>{this.state.fbData.name}</Text>
               </View>
             ) : null}
+            <Button
+              title="BARRUNDAN CREATE USER TEST"
+              onPress={() => this.testBarrundanCreateUser(this.props.token)}
+              style={{ marginTop: 10 }}
+            />
           </View>
         ) : (
           <View>
