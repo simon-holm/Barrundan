@@ -17,13 +17,26 @@ export default class App extends Component {
       {
         welcome: { screen: WelcomeScreen },
         auth: { screen: AuthScreen },
-        main: { screen: MainScreen },
-        map: { screen: MapScreen },
-        dev: { screen: DevScreen }
+        home: {
+          screen: TabNavigator(
+            {
+              main: { screen: MainScreen },
+              map: { screen: MapScreen },
+              dev: { screen: DevScreen }
+            },
+            {
+              lazy: true,
+              swipeEnabled: false,
+              animationEnabled: true,
+              navigationOptions: {
+                tabBarVisible: false
+              }
+            }
+          )
+        }
       },
       {
         lazy: true,
-        tabBarPosition: 'bottom',
         swipeEnabled: false,
         animationEnabled: true,
         navigationOptions: {

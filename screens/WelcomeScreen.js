@@ -29,6 +29,9 @@ class WelcomeScreen extends Component {
       this.setState({ token: false })
     }
   }
+  // componentDidMount() {  // ifall man vill bypassa auth
+  //   this.props.navigation.navigate('main')
+  // }
 
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')
