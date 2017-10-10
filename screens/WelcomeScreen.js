@@ -29,11 +29,6 @@ class WelcomeScreen extends Component {
       this.setState({ token: false })
     }
   }
-  // async componentWillMount() {
-  //   await AsyncStorage.removeItem('fb_token')
-  //   await AsyncStorage.removeItem('jwt')
-  //   console.log('ALEX MÖG BORTTAGET')
-  // }
 
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')

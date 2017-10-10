@@ -51,7 +51,7 @@ export const barrundanCreateUser = () => async dispatch => {
 
   let { data } = await axios
     .post(
-      'http://localhost:3070/user', // localhost IP adress. störigt
+      'http://192.168.0.16:3070/user', // localhost IP adress. störigt
       {
         token: fbToken
       },
