@@ -23,7 +23,7 @@ class AuthScreen extends Component {
   onAuthComplete(props) {
     // finns både facebook token och jwt så är vi välkomna in
     if (props.token && props.jwt) {
-      this.props.navigation.navigate('rundan')
+      this.props.navigation.navigate('main')
     }
   }
 

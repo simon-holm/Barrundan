@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
+  Button,
   View,
   Text,
   StyleSheet,
@@ -48,6 +49,10 @@ class MapScreen extends Component {
           initialRegion={region}
           onRegionChangeComplete={this.onRegionChangeComplete}
           customMapStyle={mapStyles.night}
+        />
+        <Button
+          title="BACK"
+          onPress={() => this.props.navigation.navigate('main')}
         />
       </View>
     )

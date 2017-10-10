@@ -8,8 +8,8 @@ import store from './store'
 import AuthScreen from './screens/AuthScreen'
 import WelcomeScreen from './screens/WelcomeScreen'
 import MapScreen from './screens/MapScreen'
-import SecondScreen from './screens/SecondScreen'
-import ThirdScreen from './screens/ThirdScreen'
+import DevScreen from './screens/DevScreen'
+import MainScreen from './screens/MainScreen'
 
 export default class App extends Component {
   render() {
@@ -17,29 +17,9 @@ export default class App extends Component {
       {
         welcome: { screen: WelcomeScreen },
         auth: { screen: AuthScreen },
-        main: {
-          screen: TabNavigator(
-            {
-              rundan: { screen: MapScreen },
-              andra: { screen: SecondScreen },
-              tredje: { screen: ThirdScreen }
-            },
-            {
-              lazy: true,
-              swipeEnabled: false,
-              animationEnabled: true,
-              tabBarPosition: 'bottom',
-              tabBarOptions: {
-                style: { height: 60, backgroundColor: 'transparent' },
-                tabStyle: { backgroundColor: 'transparent' },
-                labelStyle: { fontSize: 12, top: -20 },
-                indicatorStyle: { backgroundColor: '#FFBB00' },
-                showIcon: true,
-                iconStyle: { width: 30 }
-              }
-            }
-          )
-        }
+        main: { screen: MainScreen },
+        map: { screen: MapScreen },
+        dev: { screen: DevScreen }
       },
       {
         lazy: true,
