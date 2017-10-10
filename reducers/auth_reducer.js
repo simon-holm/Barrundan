@@ -5,7 +5,11 @@ import {
   SET_JWT
 } from '../actions/types'
 
-export default function(state = {}, action) {
+INITIAL_STATE = {
+  jwt: null
+}
+
+export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
     case FACEBOOK_LOGIN_SUCCESS:
       return { ...state, token: action.payload }

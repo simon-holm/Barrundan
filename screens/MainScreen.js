@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     top: 30,
     color: '#FFBB00',
     fontStyle: 'italic',
-    fontFamily: 'monospace',
+    //fontFamily: 'monospace',
     fontSize: 34
   }
 })
