@@ -24,11 +24,16 @@ class WelcomeScreen extends Component {
     let jwt = await AsyncStorage.getItem('jwt')
 
     if (token && jwt) {
-      this.props.navigation.navigate('rundan')
+      this.props.navigation.navigate('main')
     } else {
       this.setState({ token: false })
     }
   }
+  // async componentWillMount() {
+  //   await AsyncStorage.removeItem('fb_token')
+  //   await AsyncStorage.removeItem('jwt')
+  //   console.log('ALEX MÖG BORTTAGET')
+  // }
 
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')

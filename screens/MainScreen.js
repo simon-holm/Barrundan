@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, StyleSheet, Platform } from 'react-native'
+import { Button, View, Text, StyleSheet, Platform } from 'react-native'
 
 import * as actions from '../actions'
 
@@ -11,7 +11,17 @@ class ThirdScreen extends Component {
     return (
       <View style={container}>
         <Text style={barrundan}>Barrundan</Text>
-        <Text style={text}>Tredje skärmen</Text>
+        <Text style={text}>MAIN SCREEN</Text>
+        <Button
+          title="MAP"
+          onPress={() => this.props.navigation.navigate('map')}
+        />
+        <View style={{ marginTop: 15 }}>
+          <Button
+            title="DEV SCREEN"
+            onPress={() => this.props.navigation.navigate('dev')}
+          />
+        </View>
       </View>
     )
   }

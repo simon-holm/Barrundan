@@ -33,7 +33,7 @@ class MapScreen extends Component {
     console.log('testbarrundna med token', token)
     let { data } = await axios
       .post(
-        'http://192.168.0.4:3070/user',
+        'http://localhost:3070/user',
         {
           token
         },
@@ -78,6 +78,13 @@ class MapScreen extends Component {
               onPress={() => this.testBarrundanCreateUser(this.props.token)}
               style={{ marginTop: 10 }}
             />
+            <View style={{ marginTop: 15 }}>
+              <Button
+                title="BACK TO MAIN SCREEN"
+                onPress={() => this.props.navigation.navigate('main')}
+                style={{ marginTop: 10 }}
+              />
+            </View>
           </View>
         ) : (
           <View>
