@@ -48,10 +48,11 @@ export const removeToken = () => async dispatch => {
 // Barrundan API SKAPA USER => FÅ JWT
 export const barrundanCreateUser = () => async dispatch => {
   let fbToken = await AsyncStorage.getItem('fb_token')
+  console.log('fb token in barrundanCreateUser', fbToken)
 
   let { data } = await axios
     .post(
-      'http://192.168.0.16:3070/user', // localhost IP adress. störigt
+      'http://192.168.0.4:3070/user', // localhost IP adress. störigt
       {
         token: fbToken
       },
