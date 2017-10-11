@@ -24,6 +24,7 @@ export const facebookLogin = () => async dispatch => {
 }
 
 const doFacebookLogin = async dispatch => {
+  console.log('facebook login')
   let {
     type,
     token
@@ -52,7 +53,7 @@ export const barrundanCreateUser = () => async dispatch => {
 
   let { data } = await axios
     .post(
-      'http://192.168.0.4:3070/user', // localhost IP adress. störigt
+      'http://192.168.0.16:3070/user', // localhost IP adress. störigt
       {
         token: fbToken
       },
@@ -65,6 +66,7 @@ export const barrundanCreateUser = () => async dispatch => {
     .catch(e => console.log(e))
 
   const token = data.token
+  console.log('token')
   await AsyncStorage.setItem('jwt', token)
 
   dispatch({ type: SET_JWT, payload: token })

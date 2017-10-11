@@ -19,20 +19,11 @@ const SLIDE_DATA = [
 class WelcomeScreen extends Component {
   state = { isReady: false }
 
-  componentWillMount() {
-    this.fetchCache()
+  async fetchCache() {
+    // Om man vill hämta något innan appen "startar", t.ex. requira foton
+    // denna funktioner tillåter bara "hämtningr, alltså inte setState eller navigering - Expo"
   }
 
-  async fetchCache() {
-    let token = await AsyncStorage.getItem('fb_token')
-    let jwt = await AsyncStorage.getItem('jwt')
-    if (token && jwt) {
-      console.log('navigeras till main')
-      await this.props.navigation.navigate('main')
-    }
-    this.setState({ isReady: true })
-    //AsyncStorage.removeItem('fb_token')
-  }
   // componentDidMount() {
   //   // ifall man vill bypassa auth
   //   console.log('welcome mountades')
@@ -42,10 +33,25 @@ class WelcomeScreen extends Component {
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')
   }
-
+  finishGettingCache = async () => {
+    let token = await AsyncStorage.getItem('fb_token')
+    let jwt = await AsyncStorage.getItem('jwt')
+    console.log(jwt, token)
+    if (token && jwt) {
+      console.log('navigeras till main')
+      this.props.navigation.navigate('main')
+    }
+    this.setState({ isReady: true })
+  }
   render() {
     if (!this.state.isReady) {
-      return <AppLoading />
+      return (
+        <AppLoading
+          startAsync={this.fetchCache}
+          onFinish={this.finishGettingCache}
+          onError={() => console.warn}
+        />
+      )
     }
     return <Slides data={SLIDE_DATA} onComplete={this.onSlidesComplete} />
   }
