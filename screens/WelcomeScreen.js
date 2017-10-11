@@ -17,28 +17,34 @@ const SLIDE_DATA = [
 ]
 
 class WelcomeScreen extends Component {
-  state = { token: null }
+  state = { isReady: false }
 
-  async componentWillMount() {
-    // let token = await AsyncStorage.getItem('fb_token')
-    // let jwt = await AsyncStorage.getItem('jwt')
-    // if (token && jwt) {
-    //   this.props.navigation.navigate('main')
-    // } else {
-    //   this.setState({ token: false })
-    // }
+  componentWillMount() {
+    this.fetchCache()
   }
-  componentDidMount() {
-    // ifall man vill bypassa auth
-    this.props.navigation.navigate('main')
+
+  async fetchCache() {
+    let token = await AsyncStorage.getItem('fb_token')
+    let jwt = await AsyncStorage.getItem('jwt')
+    if (token && jwt) {
+      console.log('navigeras till main')
+      await this.props.navigation.navigate('main')
+    }
+    this.setState({ isReady: true })
+    //AsyncStorage.removeItem('fb_token')
   }
+  // componentDidMount() {
+  //   // ifall man vill bypassa auth
+  //   console.log('welcome mountades')
+  //   this.props.navigation.navigate('main')
+  // }
 
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')
   }
 
   render() {
-    if (_.isNull(this.state.token)) {
+    if (!this.state.isReady) {
       return <AppLoading />
     }
     return <Slides data={SLIDE_DATA} onComplete={this.onSlidesComplete} />

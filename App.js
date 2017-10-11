@@ -38,13 +38,9 @@ export default class App extends Component {
       {
         lazy: true,
         swipeEnabled: false,
-        animationEnabled: true,
+        animationEnabled: false,
         navigationOptions: {
           tabBarVisible: false
-        },
-        tabBarOptions: {
-          labelStyle: { fontSize: 12 },
-          showIcon: true
         }
       }
     )

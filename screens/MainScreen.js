@@ -4,8 +4,12 @@ import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native'
 import { Button, Icon, List, ListItem, Card } from 'react-native-elements'
 
 import Timer from '../components/Timer'
+import ParticipantsList from '../components/ParticipantsList'
 
-import * as actions from '../actions'
+import {
+  userJoinBarrunda,
+  fetchParticipants
+} from '../actions/barrunda_actions'
 
 // Fake data - ska bytas mot this.props.participants sen!
 const participants = [
@@ -60,7 +64,7 @@ class Mainscreen extends Component {
     // kalla på this.props.fetchParticipants() här!
   }
   componentDidMount() {
-    console.log(this.props)
+    console.log('Main mountades')
   }
   userJoinBarrunda = () => {
     console.log('user join barrunda!')
@@ -68,15 +72,15 @@ class Mainscreen extends Component {
     // kalla på this.props.userJoinBarrunda() här!
   }
   render() {
-    const { container, text, barrundan, joinButton } = styles
+    const { container, text, title, joinButton } = styles
 
     return (
       <ScrollView style={container}>
-        <Text style={barrundan}>Barrundan</Text>
+        <Text style={title}>Barrundan</Text>
 
-        <Text style={text}>Nästa barrunda startar om:</Text>
-
+        <Text style={text}>Barrundan startar om:</Text>
         <Timer />
+
         <View style={joinButton}>
           <Button
             title="GÅ MED"
@@ -93,17 +97,7 @@ class Mainscreen extends Component {
         </View>
 
         <Text style={text}>Deltagare just nu:</Text>
-        <Card containerStyle={{ padding: 0 }}>
-          {participants.map((participant, index) => (
-            <ListItem
-              roundAvatar
-              avatar={{ uri: participant.avatar_url }}
-              key={index}
-              title={participant.name}
-              hideChevron
-            />
-          ))}
-        </Card>
+        <ParticipantsList participants={participants} />
 
         <Button
           title="MAP"
@@ -125,13 +119,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#13213a',
     marginTop: Platform.OS === 'android' ? 24 : 0
-    //alignItems: 'center'
   },
-  barrundan: {
+  title: {
     color: '#FFBB00',
     marginTop: 30,
     fontStyle: 'italic',
-    //fontFamily: 'monospace',
     fontSize: 34,
     alignSelf: 'center'
   },
@@ -155,4 +147,7 @@ const mapStateToProps = ({ auth, barrunda }) => {
   }
 }
 
-export default connect(mapStateToProps, actions)(Mainscreen)
+export default connect(mapStateToProps, {
+  userJoinBarrunda,
+  fetchParticipants
+})(Mainscreen)
