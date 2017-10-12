@@ -31,6 +31,8 @@ class AuthScreen extends Component {
     } else if (props.token && props.jwt) {
       this.props.navigation.navigate('main')
     }
+
+    //this.props.removeToken()
   }
 
   render() {

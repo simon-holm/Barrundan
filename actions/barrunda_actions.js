@@ -7,20 +7,20 @@ export const userJoinBarrunda = () => async dispatch => {
     //TODO - Jwt token måste sättas i headern??
     let { data, status } = await axios
       .post(
-        'http://192.168.0.4:3070/barrunda/user', //ändra till rätt route sen
+        'http://localhost:3070/barrunda/participants', //ändra till rätt route sen
         {
-          //token: fbToken
+          userId: '121212121'
         },
         {
           Accept: 'application/json',
-          Authorization: 'Bearer ',
+          Authorization: `Bearer${jwtToken}`,
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       )
       .catch(e => console.log(e))
 
     // ändra till rätt sen ?
-    if (status == 200) {
+    if (status === 200) {
       fetchParticipants()
     }
   }
@@ -32,13 +32,11 @@ export const fetchParticipants = () => async dispatch => {
     //TODO - Jwt token måste sättas i headern??
     let { data } = await axios
       .get(
-        'http://192.168.0.4:3070/barrunda/users', //ändra till rätt route sen
-        {
-          //token: fbToken
-        },
+        'http://localhost:3070/barrunda/participants', //ändra till rätt route sen
+        {},
         {
           Accept: 'application/json',
-          Authorization: 'Bearer ',
+          Authorization: `Bearer${jwtToken}`,
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       )

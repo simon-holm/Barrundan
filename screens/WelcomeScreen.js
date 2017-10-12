@@ -37,6 +37,7 @@ class WelcomeScreen extends Component {
     let token = await AsyncStorage.getItem('fb_token')
     let jwt = await AsyncStorage.getItem('jwt')
     console.log(jwt, token)
+
     if (token && jwt) {
       console.log('navigeras till main')
       this.props.navigation.navigate('main')

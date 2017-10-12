@@ -53,20 +53,27 @@ export const barrundanCreateUser = () => async dispatch => {
 
   let { data } = await axios
     .post(
-      'http://192.168.0.16:3070/user', // localhost IP adress. störigt
+      'http://192.168.0.16:3070/users', // localhost IP adress. störigt
       {
         token: fbToken
       },
       {
         Accept: 'application/json',
-        Authorization: 'Bearer ',
+        Authorization: 'Bearer',
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     )
     .catch(e => console.log(e))
 
   const token = data.token
-  console.log('token')
+
+  console.log(data)
+  // AsyncStorage.setItem('key', JSON.stringify(false))
+
+  // AsyncStorage.getItem('key', (value) => {
+  //     JSON.parse(value) // boolean false
+  // })
+
   await AsyncStorage.setItem('jwt', token)
 
   dispatch({ type: SET_JWT, payload: token })
