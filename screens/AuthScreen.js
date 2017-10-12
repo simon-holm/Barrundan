@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { View, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
-import _ from 'lodash'
 
-import * as actions from '../actions'
+import {
+  facebookLogin,
+  barrundanCreateUser,
+  removeToken
+} from '../actions/auth_actions'
 
 class AuthScreen extends Component {
   componentDidMount() {
@@ -39,4 +42,8 @@ function mapStateToProps({ auth }) {
   return { token: auth.token, jwt: auth.jwt }
 }
 
-export default connect(mapStateToProps, actions)(AuthScreen)
+export default connect(mapStateToProps, {
+  facebookLogin,
+  barrundanCreateUser,
+  removeToken
+})(AuthScreen)
