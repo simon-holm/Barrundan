@@ -2,7 +2,8 @@ import {
   FACEBOOK_LOGIN_SUCCESS,
   FACEBOOK_LOGIN_FAIL,
   REMOVE_FB_TOKEN,
-  SET_JWT
+  SET_JWT,
+  SET_USER
 } from '../actions/types'
 
 INITIAL_STATE = {}
@@ -17,6 +18,8 @@ export default function(state = INITIAL_STATE, action) {
       return { token: null, jwt: null }
     case SET_JWT:
       return { ...state, jwt: action.payload }
+    case SET_USER:
+      return { ...state, user: action.payload }
     default:
       return state
   }

@@ -5,7 +5,8 @@ import {
   FACEBOOK_LOGIN_SUCCESS,
   FACEBOOK_LOGIN_FAIL,
   REMOVE_FB_TOKEN,
-  SET_JWT
+  SET_JWT,
+  SET_USER
 } from './types'
 
 // AsyncStorage tar lite tid och är promised based. såå async await
@@ -66,15 +67,11 @@ export const barrundanCreateUser = () => async dispatch => {
     .catch(e => console.log(e))
 
   const token = data.token
+  const user = data.user
 
-  console.log(data)
-  // AsyncStorage.setItem('key', JSON.stringify(false))
-
-  // AsyncStorage.getItem('key', (value) => {
-  //     JSON.parse(value) // boolean false
-  // })
-
+  await AsyncStorage.setItem('user', JSON.stringify(user))
   await AsyncStorage.setItem('jwt', token)
 
+  dispatch({ type: SET_USER, payload: user })
   dispatch({ type: SET_JWT, payload: token })
 }

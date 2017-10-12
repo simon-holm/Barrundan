@@ -60,16 +60,14 @@ const participants = [
 class Mainscreen extends Component {
   componentWillMount() {
     console.log('fetch participants')
-    // TODO
-    // kalla på this.props.fetchParticipants() här!
+    this.props.fetchParticipants()
   }
   componentDidMount() {
     console.log('Main mountades')
   }
   userJoinBarrunda = () => {
     console.log('user join barrunda!')
-    // TODO
-    // kalla på this.props.userJoinBarrunda() här!
+    this.props.userJoinBarrunda(this.props.user._id)
   }
   render() {
     const { container, text, title, joinButton } = styles
@@ -143,6 +141,7 @@ const mapStateToProps = ({ auth, barrunda }) => {
   return {
     fbToken: auth.token,
     jwt: auth.jwt,
+    user: auth.user,
     participants: barrunda.participants
   }
 }

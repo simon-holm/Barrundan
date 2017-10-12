@@ -1,52 +1,53 @@
 import axios from 'axios'
+import { AsyncStorage } from 'react-native'
 import { FETCH_PARTICIPANTS } from './types'
 
-export const userJoinBarrunda = () => async dispatch => {
+export const userJoinBarrunda = userId => async dispatch => {
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
-    //TODO - Jwt token måste sättas i headern??
-    let { data, status } = await axios
-      .post(
-        'http://localhost:3070/barrunda/participants', //ändra till rätt route sen
-        {
-          userId: '121212121'
-        },
-        {
-          Accept: 'application/json',
-          Authorization: `Bearer${jwtToken}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      )
-      .catch(e => console.log(e))
+    const authString = 'Bearer ' + jwtToken
+    let data = await axios({
+      method: 'post',
+      url: 'http://192.168.0.16:3070/barrunda/participants',
+      params: {
+        userId: userId
+      },
+      headers: {
+        Accept: 'application/json',
+        Authorization: authString,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).catch(e => console.log(e))
 
-    // ändra till rätt sen ?
-    if (status === 200) {
-      fetchParticipants()
-    }
+    // KALLA PÅ fetchParticipants här!
   }
 }
 
 export const fetchParticipants = () => async dispatch => {
+  console.log('fetch')
   let jwtToken = await AsyncStorage.getItem('jwt')
+
   if (jwtToken) {
-    //TODO - Jwt token måste sättas i headern??
+    const authString = 'Bearer ' + jwtToken
     let { data } = await axios
       .get(
-        'http://localhost:3070/barrunda/participants', //ändra till rätt route sen
-        {},
+        'http://192.168.0.16:3070/barrunda/participants', //ändra till rätt route sen
         {
-          Accept: 'application/json',
-          Authorization: `Bearer${jwtToken}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
+          headers: {
+            Accept: 'application/json',
+            Authorization: authString,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
         }
       )
       .catch(e => console.log(e))
 
     // ändra till rätt sen!
-    if (data.barrunda.participants) {
+
+    if (data) {
       dispatch({
         type: FETCH_PARTICIPANTS,
-        payload: data.barrunda.participants
+        payload: data
       })
     }
   }
