@@ -81,7 +81,7 @@ class Mainscreen extends Component {
 
     setTimeout(() => {
       this.setState({ joinedBar: true, loading: false })
-    }, 1000)
+    }, 500)
   }
   renderBarinfo() {
     if (this.state.loading) {
@@ -108,8 +108,19 @@ class Mainscreen extends Component {
       )
     } else {
       return (
-        <View style={styles.barInfo}>
-          <Text>BAR INFO</Text>
+        <View style={styles.barInfoWrapper}>
+          <Text style={styles.barNumberText}>Bar 1:</Text>
+          <Text style={styles.barInfoText}>BrewDog Bar Malmö</Text>
+          <Button
+            title="Karta"
+            buttonStyle={{
+              backgroundColor: '#4277f4',
+              borderRadius: 50
+            }}
+            fontSize={15}
+            textStyle={{ textAlign: 'center' }}
+            onPress={() => this.props.navigation.navigate('map')}
+          />
         </View>
       )
     }
@@ -160,16 +171,27 @@ const styles = StyleSheet.create({
   text: {
     color: '#FFFFFF',
     fontSize: 20,
-    marginTop: 60,
+    marginTop: 50,
     alignSelf: 'center'
   },
   joinButton: {
     flex: 1,
     marginTop: 30
   },
-  barInfo: {
+  barInfoWrapper: {
     flex: 1,
-    marginTop: 30
+    marginTop: 20,
+    alignItems: 'center'
+  },
+  barNumberText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    marginBottom: 5
+  },
+  barInfoText: {
+    color: '#FFFFFF',
+    fontSize: 26,
+    marginBottom: 20
   },
   loadingIcon: {
     marginTop: 30,
