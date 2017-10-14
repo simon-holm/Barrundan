@@ -48,8 +48,6 @@ export const fetchParticipants = () => async dispatch => {
       )
       .catch(e => console.log(e))
 
-    // ändra till rätt sen!
-
     if (data) {
       dispatch({
         type: FETCH_PARTICIPANTS,

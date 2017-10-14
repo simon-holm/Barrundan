@@ -77,16 +77,14 @@ export const barrundanCreateUser = () => async dispatch => {
 }
 
 export const registerForPushNotificationsAsync = userId => async dispatch => {
-  console.log('PUSSSSH KÖRS')
   let previousToken = await AsyncStorage.getItem('pushToken')
-  console.log(previousToken)
+
   if (previousToken) {
     return
   } else {
     const { status: existingStatus } = await Permissions.getAsync(
       Permissions.NOTIFICATIONS
     )
-    console.log(existingStatus)
     let finalStatus = existingStatus
 
     // only ask if permissions have not already been determined, because
@@ -115,8 +113,10 @@ export const registerForPushNotificationsAsync = userId => async dispatch => {
         userId: userId
       },
       {
-        Accept: 'application/json',
-        Authorization: authString
+        headers: {
+          Accept: 'application/json',
+          Authorization: authString
+        }
       }
     )
 
