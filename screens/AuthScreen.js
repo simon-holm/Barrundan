@@ -5,7 +5,8 @@ import { connect } from 'react-redux'
 import {
   facebookLogin,
   barrundanCreateUser,
-  removeToken
+  removeToken,
+  registerForPushNotificationsAsync
 } from '../actions/auth_actions'
 
 class AuthScreen extends Component {
@@ -20,7 +21,7 @@ class AuthScreen extends Component {
     this.onAuthComplete(nextProps)
   }
 
-  onAuthComplete(props) {
+  async onAuthComplete(props) {
     // finns både facebook token och jwt så är vi välkomna in
     // annars måste vi skapa användaren i barrundan API
     // så vi kollar först om ett JWT token finns
@@ -29,6 +30,8 @@ class AuthScreen extends Component {
       console.log('Calling barrundanCreateUser')
       this.props.barrundanCreateUser()
     } else if (props.token && props.jwt) {
+      await this.props.registerForPushNotificationsAsync(props.user._id)
+      console.log('ready to continue')
       this.props.navigation.navigate('main')
     }
 
@@ -41,11 +44,12 @@ class AuthScreen extends Component {
 }
 
 function mapStateToProps({ auth }) {
-  return { token: auth.token, jwt: auth.jwt }
+  return { token: auth.token, jwt: auth.jwt, user: auth.user }
 }
 
 export default connect(mapStateToProps, {
   facebookLogin,
   barrundanCreateUser,
-  removeToken
+  removeToken,
+  registerForPushNotificationsAsync
 })(AuthScreen)

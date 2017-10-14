@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { AsyncStorage } from 'react-native'
-import { Facebook } from 'expo'
+import { Facebook, Permissions, Notifications } from 'expo'
 import {
   FACEBOOK_LOGIN_SUCCESS,
   FACEBOOK_LOGIN_FAIL,
@@ -74,4 +74,54 @@ export const barrundanCreateUser = () => async dispatch => {
 
   dispatch({ type: SET_USER, payload: user })
   dispatch({ type: SET_JWT, payload: token })
+}
+
+export const registerForPushNotificationsAsync = userId => async dispatch => {
+  console.log('PUSSSSH KÖRS')
+  let previousToken = await AsyncStorage.getItem('pushToken')
+  console.log(previousToken)
+  if (previousToken) {
+    return
+  } else {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    )
+    console.log(existingStatus)
+    let finalStatus = existingStatus
+
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== 'granted') {
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+      finalStatus = status
+    }
+
+    if (finalStatus !== 'granted') {
+      return
+    }
+
+    // Get the token that uniquely identifies this device
+    let pushToken = await Notifications.getExpoPushTokenAsync()
+
+    let jwtToken = await AsyncStorage.getItem('jwt')
+    const authString = 'Bearer ' + jwtToken
+
+    let { data } = await axios.post(
+      'http://192.168.0.16:3070/user/pushtoken',
+      {
+        pushToken: pushToken,
+        userId: userId
+      },
+      {
+        Accept: 'application/json',
+        Authorization: authString
+      }
+    )
+
+    if (data) {
+      AsyncStorage.setItem('pushToken', pushToken)
+    }
+  }
 }

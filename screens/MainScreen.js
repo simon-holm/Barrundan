@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Notifications } from 'expo'
 import { connect } from 'react-redux'
 import {
   View,
@@ -6,7 +7,9 @@ import {
   StyleSheet,
   Platform,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert,
+  AsyncStorage
 } from 'react-native'
 import { Button, Icon, List, ListItem, Card } from 'react-native-elements'
 
@@ -69,11 +72,24 @@ class Mainscreen extends Component {
     joinedBar: false,
     loading: false
   }
-  componentWillMount() {
+  async componentWillMount() {
+    // Lyssnar på push event och skickar alert
+    console.log(this.props)
+    let pushToken = await AsyncStorage.getItem('pushToken')
+    if (pushToken) {
+      Notifications.addListener(notification => {
+        const { data: { text }, origin } = notification
+
+        if ((origin === 'received') & text) {
+          Alert.alert('New Push Notification', text, [{ text: 'Ok.' }])
+        }
+      })
+    }
+
     this.props.fetchParticipants()
   }
   componentDidMount() {
-    console.log('Main mountades', this.props)
+    console.log('Main mountades')
   }
   userJoinBarrunda = async () => {
     this.setState({ loading: true })
