@@ -20,7 +20,7 @@ class WelcomeScreen extends Component {
   state = { isReady: false }
 
   async fetchCache() {
-    // Om man vill hämta något innan appen "startar", t.ex. requira foton
+    // Om man vill hämta något innan appen "startar", t.ex. requira bilder
     // denna funktioner tillåter bara "hämtningr, alltså inte setState eller navigering - Expo"
   }
 
@@ -37,11 +37,14 @@ class WelcomeScreen extends Component {
     let token = await AsyncStorage.getItem('fb_token')
     let jwt = await AsyncStorage.getItem('jwt')
     console.log(jwt, token)
+
     if (token && jwt) {
       console.log('navigeras till main')
-      this.props.navigation.navigate('main')
+      this.setState({ isReady: true })
+      this.props.navigation.navigate('auth')
+    } else {
+      this.setState({ isReady: true })
     }
-    this.setState({ isReady: true })
   }
   render() {
     if (!this.state.isReady) {

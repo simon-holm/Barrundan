@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { AsyncStorage } from 'react-native'
-import { Facebook } from 'expo'
+import { Facebook, Permissions, Notifications } from 'expo'
 import {
   FACEBOOK_LOGIN_SUCCESS,
   FACEBOOK_LOGIN_FAIL,
   REMOVE_FB_TOKEN,
-  SET_JWT
+  SET_JWT,
+  SET_USER
 } from './types'
 
 // AsyncStorage tar lite tid och är promised based. såå async await
@@ -53,21 +54,74 @@ export const barrundanCreateUser = () => async dispatch => {
 
   let { data } = await axios
     .post(
-      'http://192.168.0.16:3070/user', // localhost IP adress. störigt
+      'http://192.168.0.16:3070/users', // localhost IP adress. störigt
       {
         token: fbToken
       },
       {
         Accept: 'application/json',
-        Authorization: 'Bearer ',
+        Authorization: 'Bearer',
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     )
     .catch(e => console.log(e))
 
   const token = data.token
-  console.log('token')
+  const user = data.user
+
+  await AsyncStorage.setItem('user', JSON.stringify(user))
   await AsyncStorage.setItem('jwt', token)
 
+  dispatch({ type: SET_USER, payload: user })
   dispatch({ type: SET_JWT, payload: token })
+}
+
+export const registerForPushNotificationsAsync = userId => async dispatch => {
+  let previousToken = await AsyncStorage.getItem('pushToken')
+
+  if (previousToken) {
+    return
+  } else {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    )
+    let finalStatus = existingStatus
+
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== 'granted') {
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+      finalStatus = status
+    }
+
+    if (finalStatus !== 'granted') {
+      return
+    }
+
+    // Get the token that uniquely identifies this device
+    let pushToken = await Notifications.getExpoPushTokenAsync()
+
+    let jwtToken = await AsyncStorage.getItem('jwt')
+    const authString = 'Bearer ' + jwtToken
+
+    let { data } = await axios.post(
+      'http://192.168.0.16:3070/user/pushtoken',
+      {
+        pushToken: pushToken,
+        userId: userId
+      },
+      {
+        headers: {
+          Accept: 'application/json',
+          Authorization: authString
+        }
+      }
+    )
+
+    if (data) {
+      AsyncStorage.setItem('pushToken', pushToken)
+    }
+  }
 }
