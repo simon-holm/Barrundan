@@ -2,6 +2,8 @@ import axios from 'axios'
 import { AsyncStorage } from 'react-native'
 import { FETCH_PARTICIPANTS } from './types'
 
+import { API_BASE_URL } from '../config/settings'
+
 export const userJoinBarrunda = userId => async dispatch => {
   console.log('user join barrunda!')
 
@@ -10,7 +12,7 @@ export const userJoinBarrunda = userId => async dispatch => {
     const authString = 'Bearer ' + jwtToken
     let data = await axios
       .put(
-        'http://192.168.0.16:3070/barrunda/participants',
+        API_BASE_URL + '/barrunda/participants',
         {
           userId: userId
         },
@@ -37,7 +39,7 @@ export const fetchParticipants = () => async dispatch => {
     const authString = 'Bearer ' + jwtToken
     let { data } = await axios
       .get(
-        'http://192.168.0.16:3070/barrunda/participants', //ändra till rätt route sen
+        API_BASE_URL + '/barrunda/participants', //ändra till rätt route sen
         {
           headers: {
             Accept: 'application/json',

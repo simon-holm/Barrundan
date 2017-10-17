@@ -9,6 +9,8 @@ import {
   SET_USER
 } from './types'
 
+import { API_BASE_URL } from '../config/settings'
+
 // AsyncStorage tar lite tid och är promised based. såå async await
 
 export const facebookLogin = () => async dispatch => {
@@ -54,7 +56,7 @@ export const barrundanCreateUser = () => async dispatch => {
 
   let { data } = await axios
     .post(
-      'http://192.168.0.16:3070/users', // localhost IP adress. störigt
+      API_BASE_URL + '/users', // localhost IP adress. störigt
       {
         token: fbToken
       },
@@ -107,7 +109,7 @@ export const registerForPushNotificationsAsync = userId => async dispatch => {
     const authString = 'Bearer ' + jwtToken
 
     let { data } = await axios.post(
-      'http://192.168.0.16:3070/user/pushtoken',
+      API_BASE_URL + '/user/pushtoken',
       {
         pushToken: pushToken,
         userId: userId
