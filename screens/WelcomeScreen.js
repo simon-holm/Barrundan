@@ -41,7 +41,7 @@ class WelcomeScreen extends Component {
     if (token && jwt) {
       console.log('navigeras till main')
       this.setState({ isReady: true })
-      this.props.navigation.navigate('auth')
+      this.props.navigation.navigate('main')
     } else {
       this.setState({ isReady: true })
     }

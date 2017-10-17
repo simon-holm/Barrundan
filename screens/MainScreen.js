@@ -18,7 +18,8 @@ import ParticipantsList from '../components/ParticipantsList'
 
 import {
   userJoinBarrunda,
-  fetchParticipants
+  fetchParticipants,
+  fetchBarrunda
 } from '../actions/barrunda_actions'
 
 // Fake data - ska bytas mot this.props.participants sen!
@@ -85,15 +86,18 @@ class Mainscreen extends Component {
         }
       })
     }
-
-    this.props.fetchParticipants()
+    await this.props.fetchBarrunda()
+    this.props.fetchParticipants(this.props.barrunda._id)
   }
   componentDidMount() {
     console.log('Main mountades')
   }
   userJoinBarrunda = async () => {
     this.setState({ loading: true })
-    await this.props.userJoinBarrunda(this.props.user._id)
+    await this.props.userJoinBarrunda(
+      this.props.user._id,
+      this.props.barrunda._id
+    )
 
     setTimeout(() => {
       this.setState({ joinedBar: true, loading: false })
@@ -220,11 +224,13 @@ const mapStateToProps = ({ auth, barrunda }) => {
     fbToken: auth.token,
     jwt: auth.jwt,
     user: auth.user,
-    participants: barrunda.participants
+    participants: barrunda.participants,
+    barrunda: barrunda.barrunda
   }
 }
 
 export default connect(mapStateToProps, {
   userJoinBarrunda,
-  fetchParticipants
+  fetchParticipants,
+  fetchBarrunda
 })(Mainscreen)

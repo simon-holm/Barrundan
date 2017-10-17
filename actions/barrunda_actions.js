@@ -3,20 +3,42 @@ import { AsyncStorage } from 'react-native'
 
 // Action types
 export const FETCH_PARTICIPANTS = 'fetch_participants'
+export const FETCH_BARRUNDA = 'fetch_barrunda'
 
 import { API_BASE_URL } from '../config/settings'
 
-export const userJoinBarrunda = userId => async dispatch => {
-  console.log('user join barrunda!')
+export const fetchBarrunda = () => async dispatch => {
+  let jwtToken = await AsyncStorage.getItem('jwt')
+  if (jwtToken) {
+    const authString = 'Bearer ' + jwtToken
+    let { data } = await axios
+      .get(API_BASE_URL + '/barrunda', {
+        headers: {
+          Accept: 'application/json',
+          Authorization: authString
+        }
+      })
+      .catch(e => console.log(e))
+    if (data) {
+      dispatch({
+        type: FETCH_BARRUNDA,
+        payload: data
+      })
+    }
+  }
+}
 
+export const userJoinBarrunda = (userId, barrundaId) => async dispatch => {
+  console.log('user join barrunda!')
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
     let data = await axios
-      .put(
+      .post(
         API_BASE_URL + '/barrunda/participants',
         {
-          userId: userId
+          userId: userId,
+          barrundaId: barrundaId
         },
         {
           headers: {
@@ -27,12 +49,11 @@ export const userJoinBarrunda = userId => async dispatch => {
       )
       .catch(e => console.log(e))
 
-    console.log(data)
     // KALLA PÅ fetchParticipants här ???
   }
 }
 
-export const fetchParticipants = () => async dispatch => {
+export const fetchParticipants = barrundaId => async dispatch => {
   console.log('fetch participants')
 
   let jwtToken = await AsyncStorage.getItem('jwt')
@@ -41,7 +62,7 @@ export const fetchParticipants = () => async dispatch => {
     const authString = 'Bearer ' + jwtToken
     let { data } = await axios
       .get(
-        API_BASE_URL + '/barrunda/participants', //ändra till rätt route sen
+        API_BASE_URL + '/barrunda/participants/' + barrundaId, //ändra till rätt route sen
         {
           headers: {
             Accept: 'application/json',

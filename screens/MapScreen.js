@@ -11,8 +11,6 @@ import {
 import { MapView } from 'expo'
 import { mapStyles } from '../helpers/mapStyles'
 
-import * as actions from '../actions'
-
 class MapScreen extends Component {
   state = {
     mapLoaded: false,
@@ -76,4 +74,4 @@ const mapStateToProps = ({ auth }) => {
   return { token: auth.token }
 }
 
-export default connect(mapStateToProps, actions)(MapScreen)
+export default connect(mapStateToProps, null)(MapScreen)
