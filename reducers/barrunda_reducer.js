@@ -1,4 +1,4 @@
-import { FETCH_PARTICIPANTS } from '../actions/types'
+import { FETCH_PARTICIPANTS } from '../actions/barrunda_actions'
 
 INITIAL_STATE = {
   participants: []

@@ -11,7 +11,11 @@ import {
   Image
 } from 'react-native'
 
-import * as actions from '../actions'
+import {
+  facebookLogin,
+  barrundanCreateUser,
+  removeToken
+} from '../actions/auth_actions'
 
 class MapScreen extends Component {
   state = { fbData: null }
@@ -114,4 +118,4 @@ const mapStateToProps = ({ auth }) => {
   return { token: auth.token }
 }
 
-export default connect(mapStateToProps, actions)(MapScreen)
+export default connect(mapStateToProps, { removeToken })(MapScreen)

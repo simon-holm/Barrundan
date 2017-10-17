@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { AsyncStorage } from 'react-native'
-import { FETCH_PARTICIPANTS } from './types'
+
+// Action types
+export const FETCH_PARTICIPANTS = 'fetch_participants'
 
 export const userJoinBarrunda = userId => async dispatch => {
   console.log('user join barrunda!')
