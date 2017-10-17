@@ -4,7 +4,7 @@ import {
   REMOVE_FB_TOKEN,
   SET_JWT,
   SET_USER
-} from '../actions/types'
+} from '../actions/auth_actions'
 
 INITIAL_STATE = {}
 

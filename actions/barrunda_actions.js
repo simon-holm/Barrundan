@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { AsyncStorage } from 'react-native'
-import { FETCH_PARTICIPANTS } from './types'
+
+// Action types
+export const FETCH_PARTICIPANTS = 'fetch_participants'
 
 import { API_BASE_URL } from '../config/settings'
 
