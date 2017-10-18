@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { AppLoading } from 'expo'
+import { AppLoading, Font } from 'expo'
 import { View, Text, AsyncStorage } from 'react-native'
 
 import Slides from '../components/Slides'

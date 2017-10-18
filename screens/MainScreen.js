@@ -75,7 +75,7 @@ class Mainscreen extends Component {
             title="GÅ MED"
             large
             buttonStyle={{
-              backgroundColor: '#4277f4',
+              backgroundColor: '#2877f4',
               borderRadius: 50
             }}
             fontSize={22}
@@ -87,16 +87,17 @@ class Mainscreen extends Component {
     } else {
       return (
         <View style={styles.barInfoWrapper}>
-          <Text style={styles.barNumberText}>Bar 1:</Text>
           <Text style={styles.barInfoText}>BrewDog Bar Malmö</Text>
           <Button
-            title="Karta"
+            icon={{ name: 'location-on', color: 'white', size: 22 }}
+            title="Visa karta"
             buttonStyle={{
-              backgroundColor: '#4277f4',
-              borderRadius: 50
+              backgroundColor: '#2877f4',
+              borderRadius: 50,
+              width: 250
             }}
             fontSize={15}
-            textStyle={{ textAlign: 'center' }}
+            textStyle={{ textAlign: 'center', color: 'white' }}
             onPress={() => this.props.navigation.navigate('map')}
           />
         </View>
@@ -104,20 +105,20 @@ class Mainscreen extends Component {
     }
   }
   render() {
-    const { container, text, title } = styles
+    const { container, text, title, participantList } = styles
 
     return (
       <ScrollView style={container}>
         <Text style={title}>Barrundan</Text>
 
-        <Text style={text}>Barrundan startar om:</Text>
+        <Text style={text}>Startar om</Text>
         <Timer />
 
         {this.renderBarinfo()}
 
         {this.props.participants.length > 0 ? (
-          <View>
-            <Text style={text}>Deltagare just nu:</Text>
+          <View style={participantList}>
+            <Text style={text}>{this.props.participants.length} deltagare</Text>
             <ParticipantsList participants={this.props.participants} />
           </View>
         ) : (
@@ -126,10 +127,13 @@ class Mainscreen extends Component {
           </View>
         )}
 
-        <Button
-          title="MAP"
-          onPress={() => this.props.navigation.navigate('map')}
-        />
+        <View style={{ marginTop: 15 }}>
+          <Button
+            title="MAP"
+            onPress={() => this.props.navigation.navigate('map')}
+          />
+        </View>
+
         <View style={{ marginTop: 15 }}>
           <Button
             title="DEV SCREEN"
@@ -155,16 +159,15 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'android' ? 24 : 0
   },
   title: {
-    color: '#FFBB00',
-    marginTop: Platform.OS === 'android' ? 10 : 30,
-    fontStyle: 'italic',
-    fontSize: 34,
+    color: '#f9c840',
+    marginTop: Platform.OS === 'android' ? 20 : 30,
+    fontSize: 32,
     alignSelf: 'center'
   },
   text: {
-    color: '#FFFFFF',
+    color: '#dddddd',
     fontSize: 20,
-    marginTop: 50,
+    marginTop: 40,
     alignSelf: 'center'
   },
   joinButton: {
@@ -182,13 +185,17 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   barInfoText: {
-    color: '#FFFFFF',
+    color: '#fff8ce',
     fontSize: 26,
-    marginBottom: 20
+    marginBottom: 30
   },
   loadingIcon: {
     marginTop: 30,
     flex: 1
+  },
+  participantList: {
+    marginTop: 20,
+    alignItems: 'center'
   }
 })
 
