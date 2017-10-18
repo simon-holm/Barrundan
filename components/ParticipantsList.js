@@ -9,7 +9,7 @@ class ParticipantsList extends Component {
         {this.props.participants.map((participant, index) => (
           <ListItem
             roundAvatar
-            avatar={{ uri: participant.avatar_url }}
+            avatar={{ uri: participant.imgUrl }}
             key={index}
             title={participant.name}
             hideChevron
