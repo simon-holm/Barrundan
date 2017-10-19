@@ -27,7 +27,7 @@ export default class App extends Component {
             {
               lazy: true,
               swipeEnabled: false,
-              animationEnabled: true,
+              animationEnabled: false, // Sätt TRUE sen
               navigationOptions: {
                 tabBarVisible: false
               }

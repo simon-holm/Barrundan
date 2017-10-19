@@ -32,8 +32,8 @@ class MapScreen extends Component {
       }
     })
   }
-  async componentDidMount() {
-    await this.setState({
+  componentDidMount() {
+    this.setState({
       mapLoaded: true,
       region: {
         latitude: this.props.currentBar.location.lat,
