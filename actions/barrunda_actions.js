@@ -6,6 +6,7 @@ export const FETCH_PARTICIPANTS = 'fetch_participants'
 export const FETCH_BARRUNDA = 'fetch_barrunda'
 export const USER_JOIN_SUCCESS = 'user_join_success'
 export const CLEAR_BARRUNDA = 'clear_barrunda'
+export const FETCH_CURRENT_BAR = 'fetch_current_bar'
 
 import { API_BASE_URL } from '../config/settings'
 
@@ -69,16 +70,13 @@ export const fetchParticipants = barrundaId => async dispatch => {
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
     let { data } = await axios
-      .get(
-        API_BASE_URL + '/barrunda/participants/' + barrundaId, //ändra till rätt route sen
-        {
-          headers: {
-            Accept: 'application/json',
-            Authorization: authString,
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+      .get(API_BASE_URL + '/barrunda/participants/' + barrundaId, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: authString,
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
-      )
+      })
       .catch(e => console.log(e))
 
     if (data) {
@@ -92,4 +90,29 @@ export const fetchParticipants = barrundaId => async dispatch => {
 
 export const clearOldBarrunda = () => dispatch => {
   dispatch({ type: CLEAR_BARRUNDA })
+}
+
+export const fetchCurrentBar = barrundaId => async dispatch => {
+  console.log('fetch current bar')
+  let jwtToken = await AsyncStorage.getItem('jwt')
+
+  if (jwtToken) {
+    const authString = 'Bearer ' + jwtToken
+    let { data } = await axios
+      .get(API_BASE_URL + '/barrunda/bar/' + barrundaId, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: authString,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      .catch(e => console.log(e))
+
+    if (data) {
+      dispatch({
+        type: FETCH_CURRENT_BAR,
+        payload: data
+      })
+    }
+  }
 }

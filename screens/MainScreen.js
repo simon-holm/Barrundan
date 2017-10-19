@@ -20,7 +20,8 @@ import {
   userJoinBarrunda,
   fetchParticipants,
   fetchBarrunda,
-  clearOldBarrunda
+  clearOldBarrunda,
+  fetchCurrentBar
 } from '../actions/barrunda_actions'
 
 class Mainscreen extends Component {
@@ -42,6 +43,7 @@ class Mainscreen extends Component {
       })
     }
     await this.props.fetchBarrunda()
+    await this.props.fetchCurrentBar(this.props.barrunda._id)
     this.props.fetchParticipants(this.props.barrunda._id)
   }
   componentDidMount() {
@@ -78,7 +80,7 @@ class Mainscreen extends Component {
               backgroundColor: '#2877f4',
               borderRadius: 50
             }}
-            fontSize={22}
+            fontSize={18}
             textStyle={{ textAlign: 'center' }}
             onPress={this.userJoinBarrunda}
           />
@@ -123,7 +125,9 @@ class Mainscreen extends Component {
           </View>
         ) : (
           <View>
-            <Text>NÅN TREVLIG INFO / GREJJ HÄR NÄR INGA FINNS I LISTA</Text>
+            <Text style={{ color: 'white' }}>
+              NÅN TREVLIG INFO / GREJJ HÄR NÄR INGA FINNS I LISTA
+            </Text>
           </View>
         )}
 
@@ -172,7 +176,7 @@ const styles = StyleSheet.create({
   },
   joinButton: {
     flex: 1,
-    marginTop: 30
+    marginTop: 20
   },
   barInfoWrapper: {
     flex: 1,
@@ -206,7 +210,8 @@ const mapStateToProps = ({ auth, barrunda }) => {
     user: auth.user,
     participants: barrunda.participants,
     barrunda: barrunda.barrunda,
-    isJoined: barrunda.isJoined
+    isJoined: barrunda.isJoined,
+    currentBar: barrunda.currentBar
   }
 }
 
@@ -214,5 +219,6 @@ export default connect(mapStateToProps, {
   userJoinBarrunda,
   fetchParticipants,
   fetchBarrunda,
-  clearOldBarrunda
+  clearOldBarrunda,
+  fetchCurrentBar
 })(Mainscreen)
