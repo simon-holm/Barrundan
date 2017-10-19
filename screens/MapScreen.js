@@ -88,7 +88,7 @@ class MapScreen extends Component {
           <Button
             title="Tillbaka"
             buttonStyle={{
-              backgroundColor: 'rgba(40, 119, 244, 0.6)',
+              backgroundColor: 'rgba(41, 73, 130, 0.8)',
               borderRadius: 50
             }}
             textStyle={{ color: 'white' }}

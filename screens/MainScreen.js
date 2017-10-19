@@ -9,7 +9,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from 'react-native'
 import { Button, Icon, List, ListItem, Card } from 'react-native-elements'
 
@@ -75,12 +76,12 @@ class Mainscreen extends Component {
         <View style={styles.joinButton}>
           <Button
             title="GÅ MED"
-            large
             buttonStyle={{
-              backgroundColor: '#2877f4',
-              borderRadius: 50
+              backgroundColor: '#294982',
+              borderRadius: 50,
+              height: 55
             }}
-            fontSize={18}
+            fontSize={16}
             textStyle={{ textAlign: 'center' }}
             onPress={this.userJoinBarrunda}
           />
@@ -94,9 +95,10 @@ class Mainscreen extends Component {
             icon={{ name: 'location-on', color: 'white', size: 22 }}
             title="Visa karta"
             buttonStyle={{
-              backgroundColor: '#2877f4',
+              backgroundColor: '#294982',
               borderRadius: 50,
-              width: 250
+              width: 150,
+              height: 45
             }}
             fontSize={15}
             textStyle={{ textAlign: 'center', color: 'white' }}
@@ -107,11 +109,31 @@ class Mainscreen extends Component {
     }
   }
   render() {
-    const { container, text, title, participantList } = styles
-
+    const { container, text, textSecond, title, participantList } = styles
+    const imageStyle = !this.props.isJoined
+      ? {
+          width: 350,
+          flex: 1,
+          alignSelf: 'center',
+          height: 250,
+          marginTop: 20,
+          marginBottom: 20
+        }
+      : {
+          width: 200,
+          flex: 1,
+          alignSelf: 'center',
+          height: 130,
+          marginTop: 15,
+          marginBottom: 15
+        }
     return (
       <ScrollView style={container}>
-        <Text style={title}>Barrundan</Text>
+        <Image
+          resizeMode={'contain'}
+          source={require('../assets/icons/barrundan.png')}
+          style={imageStyle}
+        />
 
         <Text style={text}>Startar om</Text>
         <Timer />
@@ -120,18 +142,14 @@ class Mainscreen extends Component {
 
         {this.props.participants.length > 0 ? (
           <View style={participantList}>
-            <Text style={text}>{this.props.participants.length} deltagare</Text>
+            <Text style={textSecond}>
+              {this.props.participants.length} deltagare
+            </Text>
             <ParticipantsList participants={this.props.participants} />
           </View>
-        ) : (
-          <View>
-            <Text style={{ color: 'white' }}>
-              NÅN TREVLIG INFO / GREJJ HÄR NÄR INGA FINNS I LISTA
-            </Text>
-          </View>
-        )}
+        ) : null}
 
-        <View style={{ marginTop: 15 }}>
+        {/* <View style={{ marginTop: 15 }}>
           <Button
             title="MAP"
             onPress={() => this.props.navigation.navigate('map')}
@@ -150,7 +168,7 @@ class Mainscreen extends Component {
             onPress={() => this.props.clearOldBarrunda()}
             style={{ marginTop: 10 }}
           />
-        </View>
+        </View> */}
       </ScrollView>
     )
   }
@@ -171,16 +189,24 @@ const styles = StyleSheet.create({
   text: {
     color: '#dddddd',
     fontSize: 20,
-    marginTop: 40,
+    marginTop: 0,
+    alignSelf: 'center'
+  },
+  textSecond: {
+    color: '#dddddd',
+    fontSize: 20,
+    marginTop: 30,
     alignSelf: 'center'
   },
   joinButton: {
     flex: 1,
-    marginTop: 20
+    marginTop: 10,
+    paddingLeft: 20,
+    paddingRight: 20
   },
   barInfoWrapper: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 10,
     alignItems: 'center'
   },
   barNumberText: {
@@ -189,9 +215,9 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   barInfoText: {
-    color: '#fff8ce',
+    color: '#FFFFFF',
     fontSize: 26,
-    marginBottom: 30
+    marginBottom: 20
   },
   loadingIcon: {
     marginTop: 30,

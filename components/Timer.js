@@ -53,9 +53,10 @@ const styles = StyleSheet.create({
     width: width / 3
   },
   time: {
-    color: '#dddddd',
+    color: '#D66853',
     fontSize: 60,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginBottom: -5
   },
   timeText: {
     color: '#b2b2b2',
