@@ -46,18 +46,19 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 20
+    marginTop: 0,
+    marginBottom: 30
   },
   timer: {
     width: width / 3
   },
   time: {
-    color: '#FFFFFF',
+    color: '#dddddd',
     fontSize: 60,
     alignSelf: 'center'
   },
   timeText: {
-    color: '#FFFFFF',
+    color: '#b2b2b2',
     fontSize: 12,
     alignSelf: 'center'
   }

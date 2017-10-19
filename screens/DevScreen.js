@@ -17,6 +17,8 @@ import {
   removeToken
 } from '../actions/auth_actions'
 
+import { clearOldBarrunda } from '../actions/barrunda_actions'
+
 class MapScreen extends Component {
   state = { fbData: null }
 
@@ -89,6 +91,13 @@ class MapScreen extends Component {
                 style={{ marginTop: 10 }}
               />
             </View>
+            <View style={{ marginTop: 15 }}>
+              <Button
+                title="CLEAR OLD BARRUNDA"
+                onPress={() => this.props.clearOldBarrunda()}
+                style={{ marginTop: 10 }}
+              />
+            </View>
           </View>
         ) : (
           <View>
@@ -118,4 +127,6 @@ const mapStateToProps = ({ auth }) => {
   return { token: auth.token }
 }
 
-export default connect(mapStateToProps, { removeToken })(MapScreen)
+export default connect(mapStateToProps, { removeToken, clearOldBarrunda })(
+  MapScreen
+)

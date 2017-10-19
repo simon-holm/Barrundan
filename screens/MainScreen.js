@@ -19,54 +19,9 @@ import ParticipantsList from '../components/ParticipantsList'
 import {
   userJoinBarrunda,
   fetchParticipants,
-  fetchBarrunda
+  fetchBarrunda,
+  clearOldBarrunda
 } from '../actions/barrunda_actions'
-
-// Fake data - ska bytas mot this.props.participants sen!
-const participants = [
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
-  },
-  {
-    name: 'Chris Jackson',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
-  },
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
-  },
-  {
-    name: 'Chris Jackson',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
-  },
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
-  },
-  {
-    name: 'Chris Jackson',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
-  },
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
-  }
-]
 
 class Mainscreen extends Component {
   state = {
@@ -99,8 +54,11 @@ class Mainscreen extends Component {
       this.props.barrunda._id
     )
 
-    setTimeout(() => {
-      this.setState({ joinedBar: true, loading: false })
+    setTimeout(async () => {
+      if (this.props.isJoined) {
+        await this.props.fetchParticipants(this.props.barrunda._id)
+        this.setState({ loading: false })
+      }
     }, 500)
   }
   renderBarinfo() {
@@ -110,14 +68,14 @@ class Mainscreen extends Component {
           <ActivityIndicator size={'large'} />
         </View>
       )
-    } else if (!this.state.joinedBar) {
+    } else if (!this.props.isJoined) {
       return (
         <View style={styles.joinButton}>
           <Button
             title="GÅ MED"
             large
             buttonStyle={{
-              backgroundColor: '#4277f4',
+              backgroundColor: '#2877f4',
               borderRadius: 50
             }}
             fontSize={22}
@@ -129,16 +87,17 @@ class Mainscreen extends Component {
     } else {
       return (
         <View style={styles.barInfoWrapper}>
-          <Text style={styles.barNumberText}>Bar 1:</Text>
           <Text style={styles.barInfoText}>BrewDog Bar Malmö</Text>
           <Button
-            title="Karta"
+            icon={{ name: 'location-on', color: 'white', size: 22 }}
+            title="Visa karta"
             buttonStyle={{
-              backgroundColor: '#4277f4',
-              borderRadius: 50
+              backgroundColor: '#2877f4',
+              borderRadius: 50,
+              width: 250
             }}
             fontSize={15}
-            textStyle={{ textAlign: 'center' }}
+            textStyle={{ textAlign: 'center', color: 'white' }}
             onPress={() => this.props.navigation.navigate('map')}
           />
         </View>
@@ -146,28 +105,46 @@ class Mainscreen extends Component {
     }
   }
   render() {
-    const { container, text, title } = styles
+    const { container, text, title, participantList } = styles
 
     return (
       <ScrollView style={container}>
         <Text style={title}>Barrundan</Text>
 
-        <Text style={text}>Barrundan startar om:</Text>
+        <Text style={text}>Startar om</Text>
         <Timer />
 
         {this.renderBarinfo()}
 
-        <Text style={text}>Deltagare just nu:</Text>
-        <ParticipantsList participants={participants} />
+        {this.props.participants.length > 0 ? (
+          <View style={participantList}>
+            <Text style={text}>{this.props.participants.length} deltagare</Text>
+            <ParticipantsList participants={this.props.participants} />
+          </View>
+        ) : (
+          <View>
+            <Text>NÅN TREVLIG INFO / GREJJ HÄR NÄR INGA FINNS I LISTA</Text>
+          </View>
+        )}
 
-        <Button
-          title="MAP"
-          onPress={() => this.props.navigation.navigate('map')}
-        />
+        <View style={{ marginTop: 15 }}>
+          <Button
+            title="MAP"
+            onPress={() => this.props.navigation.navigate('map')}
+          />
+        </View>
+
         <View style={{ marginTop: 15 }}>
           <Button
             title="DEV SCREEN"
             onPress={() => this.props.navigation.navigate('dev')}
+          />
+        </View>
+        <View style={{ marginTop: 15 }}>
+          <Button
+            title="CLEAR OLD BARRUNDA"
+            onPress={() => this.props.clearOldBarrunda()}
+            style={{ marginTop: 10 }}
           />
         </View>
       </ScrollView>
@@ -182,16 +159,15 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'android' ? 24 : 0
   },
   title: {
-    color: '#FFBB00',
-    marginTop: Platform.OS === 'android' ? 10 : 30,
-    fontStyle: 'italic',
-    fontSize: 34,
+    color: '#f9c840',
+    marginTop: Platform.OS === 'android' ? 20 : 30,
+    fontSize: 32,
     alignSelf: 'center'
   },
   text: {
-    color: '#FFFFFF',
+    color: '#dddddd',
     fontSize: 20,
-    marginTop: 50,
+    marginTop: 40,
     alignSelf: 'center'
   },
   joinButton: {
@@ -209,13 +185,17 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   barInfoText: {
-    color: '#FFFFFF',
+    color: '#fff8ce',
     fontSize: 26,
-    marginBottom: 20
+    marginBottom: 30
   },
   loadingIcon: {
     marginTop: 30,
     flex: 1
+  },
+  participantList: {
+    marginTop: 20,
+    alignItems: 'center'
   }
 })
 
@@ -225,12 +205,14 @@ const mapStateToProps = ({ auth, barrunda }) => {
     jwt: auth.jwt,
     user: auth.user,
     participants: barrunda.participants,
-    barrunda: barrunda.barrunda
+    barrunda: barrunda.barrunda,
+    isJoined: barrunda.isJoined
   }
 }
 
 export default connect(mapStateToProps, {
   userJoinBarrunda,
   fetchParticipants,
-  fetchBarrunda
+  fetchBarrunda,
+  clearOldBarrunda
 })(Mainscreen)

@@ -4,6 +4,8 @@ import { AsyncStorage } from 'react-native'
 // Action types
 export const FETCH_PARTICIPANTS = 'fetch_participants'
 export const FETCH_BARRUNDA = 'fetch_barrunda'
+export const USER_JOIN_SUCCESS = 'user_join_success'
+export const CLEAR_BARRUNDA = 'clear_barrunda'
 
 import { API_BASE_URL } from '../config/settings'
 
@@ -33,7 +35,7 @@ export const userJoinBarrunda = (userId, barrundaId) => async dispatch => {
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
-    let data = await axios
+    let { status } = await axios
       .post(
         API_BASE_URL + '/barrunda/participants',
         {
@@ -50,6 +52,12 @@ export const userJoinBarrunda = (userId, barrundaId) => async dispatch => {
       .catch(e => console.log(e))
 
     // KALLA PÅ fetchParticipants här ???
+    console.log(status)
+    if (status === 200) {
+      dispatch({
+        type: USER_JOIN_SUCCESS
+      })
+    }
   }
 }
 
@@ -80,4 +88,8 @@ export const fetchParticipants = barrundaId => async dispatch => {
       })
     }
   }
+}
+
+export const clearOldBarrunda = () => dispatch => {
+  dispatch({ type: CLEAR_BARRUNDA })
 }
