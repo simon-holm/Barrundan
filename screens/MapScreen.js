@@ -88,10 +88,10 @@ class MapScreen extends Component {
           <Button
             title="Tillbaka"
             buttonStyle={{
-              backgroundColor: 'rgba(41, 73, 130, 0.8)',
+              backgroundColor: 'rgba(62, 92, 118, 0.8)',
               borderRadius: 50
             }}
-            textStyle={{ color: 'white' }}
+            textStyle={{ color: '#dddddd' }}
             onPress={() => this.props.navigation.navigate('main')}
           />
         </View>

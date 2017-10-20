@@ -77,12 +77,12 @@ class Mainscreen extends Component {
           <Button
             title="GÅ MED"
             buttonStyle={{
-              backgroundColor: '#294982',
+              backgroundColor: '#3E5C76',
               borderRadius: 50,
               height: 55
             }}
             fontSize={16}
-            textStyle={{ textAlign: 'center' }}
+            textStyle={{ textAlign: 'center', color: '#dddddd' }}
             onPress={this.userJoinBarrunda}
           />
         </View>
@@ -90,18 +90,18 @@ class Mainscreen extends Component {
     } else {
       return (
         <View style={styles.barInfoWrapper}>
-          <Text style={styles.barInfoText}>BrewDog Bar Malmö</Text>
+          <Text style={styles.barInfoText}>{this.props.currentBar.name}</Text>
           <Button
             icon={{ name: 'location-on', color: 'white', size: 22 }}
             title="Visa karta"
             buttonStyle={{
-              backgroundColor: '#294982',
+              backgroundColor: '#3E5C76',
               borderRadius: 50,
               width: 150,
               height: 45
             }}
             fontSize={15}
-            textStyle={{ textAlign: 'center', color: 'white' }}
+            textStyle={{ textAlign: 'center', color: '#dddddd' }}
             onPress={() => this.props.navigation.navigate('map')}
           />
         </View>
@@ -136,7 +136,7 @@ class Mainscreen extends Component {
         />
 
         <Text style={text}>Startar om</Text>
-        <Timer />
+        <Timer startTime={this.props.currentBar.startTime} />
 
         {this.renderBarinfo()}
 
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   barInfoText: {
-    color: '#FFFFFF',
+    color: '#dddddd',
     fontSize: 26,
     marginBottom: 20
   },
