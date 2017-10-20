@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   participantList: {
-    marginTop: 20,
+    marginTop: 5,
     alignItems: 'center'
   }
 })
