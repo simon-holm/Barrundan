@@ -62,6 +62,12 @@ export const userJoinBarrunda = (userId, barrundaId) => async dispatch => {
   }
 }
 
+export const userAlreadyJoinedBarrunda = () => dispatch => {
+  dispatch({
+    type: USER_JOIN_SUCCESS
+  })
+}
+
 export const fetchParticipants = barrundaId => async dispatch => {
   console.log('fetch participants')
 

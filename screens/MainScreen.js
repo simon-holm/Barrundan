@@ -22,12 +22,12 @@ import {
   fetchParticipants,
   fetchBarrunda,
   clearOldBarrunda,
-  fetchCurrentBar
+  fetchCurrentBar,
+  userAlreadyJoinedBarrunda
 } from '../actions/barrunda_actions'
 
 class Mainscreen extends Component {
   state = {
-    joinedBar: false,
     loading: false
   }
   async componentWillMount() {
@@ -45,7 +45,12 @@ class Mainscreen extends Component {
     }
     await this.props.fetchBarrunda()
     await this.props.fetchCurrentBar(this.props.barrunda._id)
-    this.props.fetchParticipants(this.props.barrunda._id)
+    await this.props.fetchParticipants(this.props.barrunda._id)
+    this.props.participants.map(participant => {
+      if (participant._id === this.props.user._id) {
+        this.props.userAlreadyJoinedBarrunda()
+      }
+    })
   }
   componentDidMount() {
     console.log('Main mountades')
@@ -92,7 +97,7 @@ class Mainscreen extends Component {
         <View style={styles.barInfoWrapper}>
           <Text style={styles.barInfoText}>{this.props.currentBar.name}</Text>
           <Button
-            icon={{ name: 'location-on', color: 'white', size: 22 }}
+            icon={{ name: 'location-on', color: '#dddddd', size: 22 }}
             title="Visa karta"
             buttonStyle={{
               backgroundColor: '#3E5C76',
@@ -134,10 +139,12 @@ class Mainscreen extends Component {
           source={require('../assets/icons/barrundan.png')}
           style={imageStyle}
         />
-
-        <Text style={text}>Startar om</Text>
-        <Timer startTime={this.props.currentBar.startTime} />
-
+        {this.props.currentBar ? (
+          <View>
+            <Text style={text}>Startar om</Text>
+            <Timer startTime={this.props.currentBar.startTime} />
+          </View>
+        ) : null}
         {this.renderBarinfo()}
 
         {this.props.participants.length > 0 ? (
@@ -246,5 +253,6 @@ export default connect(mapStateToProps, {
   fetchParticipants,
   fetchBarrunda,
   clearOldBarrunda,
-  fetchCurrentBar
+  fetchCurrentBar,
+  userAlreadyJoinedBarrunda
 })(Mainscreen)

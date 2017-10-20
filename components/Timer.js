@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginTop: 0,
     marginBottom: 30,
-    paddingLeft: 20,
-    paddingRight: 20
+    paddingLeft: 10,
+    paddingRight: 10
   },
   timer: {
     width: width / 3
