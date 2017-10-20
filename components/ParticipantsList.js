@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   image: {
     width: 50,
     height: 50,
-    borderRadius: 50
+    borderRadius: 25
   },
   name: {
     color: '#dddddd',
@@ -48,20 +48,3 @@ const styles = StyleSheet.create({
 })
 
 export default ParticipantsList
-// <ListItem
-//   roundAvatar
-//   avatar={{ uri: participant.imgUrl }}
-//   key={index}
-//   title={participant.name}
-//   hideChevron
-//   containerStyle={{
-//     height: 65,
-//     backgroundColor: 'transparent',
-//     borderBottomColor: 'transparent'
-//   }}
-//   avatarStyle={{ height: 45, width: 45, borderRadius: 100 }}
-//   avatarOverlayContainerStyle={{ borderRadius: 100 }}
-//   avatarContainerStyle={{ height: 45, width: 45 }}
-//   roundAvatar={true}
-//   titleStyle={{ paddingLeft: 10, color: 'white' }}
-// />

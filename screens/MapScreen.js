@@ -8,13 +8,14 @@ import {
   ActivityIndicator,
   Dimensions
 } from 'react-native'
-import { Button } from 'react-native-elements'
-import { MapView } from 'expo'
+import { Button, SocialIcon } from 'react-native-elements'
+import { MapView, Constants, Permissions, Location } from 'expo'
 import { mapStyles } from '../helpers/mapStyles'
 
 class MapScreen extends Component {
   state = {
     mapLoaded: false,
+    userPosition: {},
     region: {
       latitude: 55.607734,
       longitude: 13.000319,
@@ -22,17 +23,23 @@ class MapScreen extends Component {
       longitudeDelta: 0.005 // standard 0.04
     }
   }
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      region: {
-        latitude: newProps.currentBar.location.lat,
-        longitude: newProps.currentBar.location.lng,
-        latitudeDelta: 0.01125,
-        longitudeDelta: 0.005
-      }
-    })
-  }
+  // componentWillReceiveProps(newProps) {
+  //   this.setState({
+  //     region: {
+  //       latitude: newProps.currentBar.location.lat,
+  //       longitude: newProps.currentBar.location.lng,
+  //       latitudeDelta: 0.01125,
+  //       longitudeDelta: 0.005
+  //     }
+  //   })
+  // }
   componentDidMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      console.log('error')
+    } else {
+      this._getLocationAsync()
+    }
+
     this.setState({
       mapLoaded: true,
       region: {
@@ -43,7 +50,41 @@ class MapScreen extends Component {
       }
     })
   }
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION)
+    if (status !== 'granted') {
+      console.log('error')
+    }
 
+    let location = await Location.getCurrentPositionAsync({})
+    let userPosition = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.01125,
+      longitudeDelta: 0.005
+    }
+    this.setState({ userPosition })
+  }
+  setRegionToUser() {
+    console.log(this.state.userPosition)
+    if (this.state.userPosition) {
+      this.setState({
+        region: this.state.userPosition
+      })
+    } else {
+      console.log('Vi kan inte visa din plats')
+    }
+  }
+  setRegionToBar() {
+    this.setState({
+      region: {
+        latitude: this.props.currentBar.location.lat,
+        longitude: this.props.currentBar.location.lng,
+        latitudeDelta: 0.01125,
+        longitudeDelta: 0.005
+      }
+    })
+  }
   onRegionChangeComplete = region => {
     this.setState({ region })
   }
@@ -63,6 +104,7 @@ class MapScreen extends Component {
         <MapView
           style={{ flex: 1 }}
           initialRegion={region}
+          region={region}
           onRegionChangeComplete={this.onRegionChangeComplete}
           customMapStyle={mapStyles.night}
         >
@@ -75,24 +117,61 @@ class MapScreen extends Component {
               longitude: this.props.currentBar.location.lng
             }}
           />
-          <MapView.Marker
-            title={'Här är din platss'}
-            coordinate={{
-              latitude: 55.608734,
-              longitude: 13.000919
-            }}
-          />
+          {this.state.userPosition ? (
+            <MapView.Marker
+              title={'Din plats'}
+              coordinate={{
+                latitude: this.state.userPosition.latitude || 0,
+                longitude: this.state.userPosition.longitude || 0
+              }}
+            />
+          ) : null}
         </MapView>
 
         <View style={styles.buttonWrapper}>
           <Button
             title="Tillbaka"
             buttonStyle={{
-              backgroundColor: 'rgba(40, 119, 244, 0.6)',
+              backgroundColor: 'rgba(62, 92, 118, 0.8)',
               borderRadius: 50
             }}
-            textStyle={{ color: 'white' }}
+            textStyle={{ color: '#dddddd' }}
             onPress={() => this.props.navigation.navigate('main')}
+          />
+        </View>
+        <View style={styles.locationWrapper}>
+          <Button
+            icon={{ name: 'accessibility', color: '#dddddd', size: 28 }}
+            buttonStyle={{
+              backgroundColor: 'rgba(62, 92, 118, 0.7)',
+              borderRadius: 50,
+              height: 50,
+              width: 50,
+              marginBottom: 10,
+              paddingLeft: 10,
+              paddingRight: 0
+            }}
+            textStyle={{ color: '#dddddd' }}
+            onPress={() => this.setRegionToUser()}
+          />
+          <Button
+            icon={{
+              name: 'md-beer',
+              type: 'ionicon',
+              color: '#f4d941',
+              size: 28
+            }}
+            buttonStyle={{
+              backgroundColor: 'rgba(62, 92, 118, 0.7)',
+              borderRadius: 50,
+              height: 50,
+              width: 50,
+              marginBottom: 10,
+              paddingLeft: 10,
+              paddingRight: 0
+            }}
+            textStyle={{ color: '#dddddd' }}
+            onPress={() => this.setRegionToBar()}
           />
         </View>
       </View>
@@ -119,6 +198,11 @@ const styles = StyleSheet.create({
     width: width,
     paddingLeft: 40,
     paddingRight: 40
+  },
+  locationWrapper: {
+    position: 'absolute',
+    top: 35,
+    right: -5
   }
 })
 

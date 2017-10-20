@@ -3,16 +3,52 @@ import { View, StyleSheet, Text, Dimensions } from 'react-native'
 
 class Timer extends Component {
   state = {
-    time: 59
+    days: 99,
+    hours: 99,
+    minutes: 99,
+    seconds: 99
   }
   componentDidMount() {
-    this.ticker = setInterval(() => {
-      if (this.state.time === 0) {
-        this.setState({ time: 59 })
-      } else {
-        this.setState({ time: this.state.time - 1 })
+    // Lite humor nedräkning istället för en loader
+    this.loaderIntervall = setInterval(() => {
+      if (this.state.days <= 0) {
+        this.setState({
+          days: 99,
+          hours: 99,
+          minutes: 99,
+          seconds: 99
+        })
       }
-    }, 1000)
+      this.setState({
+        days: this.state.days - 1,
+        hours: this.state.hours - 1,
+        minutes: this.state.minutes - 1,
+        seconds: this.state.seconds - 1
+      })
+    }, 2)
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.startTime) {
+      this.ticker = setInterval(() => {
+        let now = new Date()
+        let target = new Date(nextProps.startTime)
+        let difference = target.getTime() - now.getTime()
+        let seconds = Math.floor(difference / 1000)
+        let minutes = Math.floor(seconds / 60)
+        let hours = Math.floor(minutes / 60)
+        let days = Math.floor(hours / 24)
+        hours %= 24
+        minutes %= 60
+        seconds %= 60
+        clearInterval(this.loaderIntervall)
+        this.setState({
+          days,
+          hours,
+          minutes,
+          seconds
+        })
+      }, 1000)
+    }
   }
   componentWillUnmount() {
     clearInterval(this.ticker)
@@ -23,16 +59,23 @@ class Timer extends Component {
 
     return (
       <View style={timerWrapper}>
+        {this.state.days > 0 ? (
+          <View style={timer}>
+            <Text style={time}>{this.state.days}</Text>
+            <Text style={timeText}>Dagar</Text>
+          </View>
+        ) : null}
+
         <View style={timer}>
-          <Text style={time}>20</Text>
+          <Text style={time}>{this.state.hours}</Text>
           <Text style={timeText}>Timmar</Text>
         </View>
         <View style={timer}>
-          <Text style={time}>40</Text>
+          <Text style={time}>{this.state.minutes}</Text>
           <Text style={timeText}>Minuter</Text>
         </View>
         <View style={timer}>
-          <Text style={time}>{this.state.time}</Text>
+          <Text style={time}>{this.state.seconds}</Text>
           <Text style={timeText}>Sekunder</Text>
         </View>
       </View>
@@ -47,18 +90,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 0,
-    marginBottom: 30
+    marginBottom: 30,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   timer: {
     width: width / 3
   },
   time: {
-    color: '#dddddd',
+    color: '#FF934F',
     fontSize: 60,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginBottom: -5
   },
   timeText: {
-    color: '#b2b2b2',
+    color: '#6B717E',
     fontSize: 12,
     alignSelf: 'center'
   }

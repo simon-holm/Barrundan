@@ -1,24 +1,90 @@
 import React, { Component } from 'react'
-import { Button, View, Text, ScrollView, Dimensions } from 'react-native'
+import { Image, View, Text, ScrollView, Dimensions } from 'react-native'
+import { SocialIcon } from 'react-native-elements'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 class Slides extends Component {
   renderLastSlide(index) {
     if (index === this.props.data.length - 1) {
-      return <Button title="OK!" onPress={this.props.onComplete} />
+      return (
+        <SocialIcon
+          title="Logga in med Facebook"
+          button
+          raised={true}
+          style={{ width: 250 }}
+          type="facebook"
+          onPress={this.props.onComplete}
+        />
+      )
     }
   }
 
   renderSlides() {
     return this.props.data.map((slide, index) => {
+      if (index === 0) {
+        return (
+          <View
+            key={slide.text}
+            style={[styles.slideStyle, { backgroundColor: slide.color }]}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={require('../assets/icons/barrundan.png')}
+              style={{
+                width: 350,
+                alignSelf: 'center',
+                height: 350
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 30,
+                color: 'white',
+                marginLeft: 15,
+                marginRight: 15,
+                marginBottom: 10
+              }}
+            >
+              Välkommen!
+            </Text>
+            <Text
+              style={{
+                fontSize: 20,
+                color: '#CCCCCC',
+                marginLeft: 15,
+                marginRight: 15,
+                textAlign: 'center'
+              }}
+            >
+              Kom igång >>
+            </Text>
+          </View>
+        )
+      }
       return (
         <View
           key={slide.text}
-          style={[styles.slideStyle, { backgroundColor: slide.color }]}
+          style={[styles.finalSlideStyle, { backgroundColor: slide.color }]}
         >
-          <Text style={styles.textStyle}>{slide.text}</Text>
+          <View style={{ flex: 1, marginTop: 65 }}>
+            <Text style={styles.textStyle}>{slide.text}</Text>
+            <Text style={styles.textStyle}>{slide.text2}</Text>
+            <Text style={styles.textStyle}>{slide.text3}</Text>
+          </View>
+
           {this.renderLastSlide(index)}
+          <View>
+            <Image
+              resizeMode={'contain'}
+              source={require('../assets/icons/beer-loader.gif')}
+              style={{
+                width: SCREEN_WIDTH,
+                alignSelf: 'center',
+                height: 350
+              }}
+            />
+          </View>
         </View>
       )
     })
@@ -40,21 +106,19 @@ const styles = {
     alignItems: 'center',
     width: SCREEN_WIDTH
   },
+  finalSlideStyle: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: SCREEN_WIDTH
+  },
   textStyle: {
-    fontSize: 30,
+    fontSize: 26,
     color: 'white',
     textAlign: 'center',
     marginLeft: 15,
-    marginRight: 15
-  },
-  buttonStyle: {
-    backgroundColor: '#0288D1',
-    marginTop: 15
-  },
-  buttonTextStyle: {
-    fontSize: 22,
-    paddingLeft: 40,
-    paddingRight: 40
+    marginRight: 15,
+    paddingTop: 15
   }
 }
 

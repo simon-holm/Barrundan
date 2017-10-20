@@ -6,14 +6,13 @@ import { View, Text, AsyncStorage } from 'react-native'
 import Slides from '../components/Slides'
 
 const SLIDE_DATA = [
-  { text: 'Välkommen till Barrundan', color: '#03A9F4' },
+  { text: 'logga', color: '#13213a' },
   {
-    text: 'En ny runda varje vecka',
-    color: '#009688'
-  },
-  { text: 'Aldrig mer kröka alena', color: '#03A9F4' },
-  { text: 'Här kan det stå nått intressant, kanske en bild', color: '#009688' },
-  { text: 'Här är sista slajden, Nu till FacebookLogin', color: '#03A9F4' }
+    text: 'Barrunda i Malmö',
+    text2: 'Varje lördag klockan 20:00',
+    text3: 'Häng med!',
+    color: '#5db596'
+  }
 ]
 
 class WelcomeScreen extends Component {
@@ -23,12 +22,6 @@ class WelcomeScreen extends Component {
     // Om man vill hämta något innan appen "startar", t.ex. requira bilder
     // denna funktioner tillåter bara "hämtningr, alltså inte setState eller navigering - Expo"
   }
-
-  // componentDidMount() {
-  //   // ifall man vill bypassa auth
-  //   console.log('welcome mountades')
-  //   this.props.navigation.navigate('main')
-  // }
 
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')
