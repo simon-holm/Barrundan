@@ -16,6 +16,7 @@ import { Button, Icon, List, ListItem, Card } from 'react-native-elements'
 
 import Timer from '../components/Timer'
 import ParticipantsList from '../components/ParticipantsList'
+import BarScroll from '../components/BarScroll'
 
 import {
   userJoinBarrunda,
@@ -30,19 +31,8 @@ class Mainscreen extends Component {
   state = {
     loading: false
   }
-  async componentWillMount() {
-    // Lyssnar på push event och skickar alert
-    console.log(this.props)
-    let pushToken = await AsyncStorage.getItem('pushToken')
-    if (pushToken) {
-      Notifications.addListener(notification => {
-        const { data: { text }, origin } = notification
-
-        if ((origin === 'received') & text) {
-          Alert.alert('New Push Notification', text, [{ text: 'Ok.' }])
-        }
-      })
-    }
+  async refresh() {
+    console.log("laaddda omm dåååååååå")
     await this.props.fetchBarrunda()
     await this.props.fetchCurrentBar(this.props.barrunda._id)
     await this.props.fetchParticipants(this.props.barrunda._id)
@@ -52,22 +42,38 @@ class Mainscreen extends Component {
       }
     })
   }
-  componentDidMount() {
-    console.log('Main mountades')
+  async componentWillMount() {
+    let pushToken = await AsyncStorage.getItem('pushToken')
+    if (pushToken) {
+      Notifications.addListener(notification => {
+        const { data: { text }, origin } = notification
+
+        if ((origin === 'received') & text) {
+          Alert.alert('Barrundan', text, [{ text: 'Ok.' }])
+        }
+      })
+    }
+
+    this.setState({ loading: true })
+    await this.refresh()
+    this.setState({ loading: false })
+
+    this.refreshInterval = setInterval(async () => {
+      await this.refresh()
+    }, 30000)
   }
-  userJoinBarrunda = async () => {
+
+  componentWillUnmount() {
+    clearInterval(this.refreshInterval)
+  }
+
+  onUserJoinBarrunda = async () => {
     this.setState({ loading: true })
     await this.props.userJoinBarrunda(
       this.props.user._id,
       this.props.barrunda._id
     )
-
-    setTimeout(async () => {
-      if (this.props.isJoined) {
-        await this.props.fetchParticipants(this.props.barrunda._id)
-        this.setState({ loading: false })
-      }
-    }, 500)
+    this.setState({ loading: false })
   }
   renderBarinfo() {
     if (this.state.loading) {
@@ -88,33 +94,26 @@ class Mainscreen extends Component {
             }}
             fontSize={16}
             textStyle={{ textAlign: 'center', color: '#dddddd' }}
-            onPress={this.userJoinBarrunda}
+            onPress={this.onUserJoinBarrunda}
           />
         </View>
       )
     } else {
       return (
-        <View style={styles.barInfoWrapper}>
-          <Text style={styles.barInfoText}>{this.props.currentBar.name}</Text>
-          <Button
-            icon={{ name: 'location-on', color: '#dddddd', size: 22 }}
-            title="Visa karta"
-            buttonStyle={{
-              backgroundColor: '#3E5C76',
-              borderRadius: 50,
-              width: 150,
-              height: 45
-            }}
-            fontSize={15}
-            textStyle={{ textAlign: 'center', color: '#dddddd' }}
-            onPress={() => this.props.navigation.navigate('map')}
-          />
-        </View>
+        <BarScroll
+          bars={this.props.barrunda.bars}
+          barMapClick={async (bar) => {
+            if(bar._id != this.props.currentBar._id){
+               await this.props.fetchCurrentBar()
+            }
+            this.props.navigation.navigate('map')
+          }}
+        />
       )
     }
   }
   render() {
-    const { container, text, textSecond, title, participantList } = styles
+    const { container, text, textSecond, participantList } = styles
     const imageStyle = !this.props.isJoined
       ? {
           width: 350,
@@ -139,10 +138,10 @@ class Mainscreen extends Component {
           source={require('../assets/icons/barrundan.png')}
           style={imageStyle}
         />
-        {this.props.currentBar ? (
+        {this.props.barrunda ? (
           <View>
             <Text style={text}>Startar om</Text>
-            <Timer startTime={this.props.currentBar.startTime} />
+            <Timer startTime={this.props.barrunda.startTime} />
           </View>
         ) : null}
         {this.renderBarinfo()}
@@ -211,20 +210,10 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20
   },
-  barInfoWrapper: {
-    flex: 1,
-    marginTop: 10,
-    alignItems: 'center'
-  },
   barNumberText: {
     color: '#FFFFFF',
     fontSize: 18,
     marginBottom: 5
-  },
-  barInfoText: {
-    color: '#dddddd',
-    fontSize: 26,
-    marginBottom: 20
   },
   loadingIcon: {
     marginTop: 30,

@@ -9,7 +9,8 @@ import {
 INITIAL_STATE = {
   participants: [],
   isJoined: false,
-  currentBar: {}
+  currentBar: {},
+  barrunda: null
 }
 
 export default function(state = INITIAL_STATE, action) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AsyncStorage } from 'react-native'
+import { View } from 'react-native'
 import { connect } from 'react-redux'
 
 import {
@@ -28,7 +28,7 @@ class AuthScreen extends Component {
     if (props.token && !props.jwt) {
       console.log('JWT is missing in authComplete')
       console.log('Calling barrundanCreateUser')
-      this.props.barrundanCreateUser()
+      await this.props.barrundanCreateUser()
     } else if (props.token && props.jwt) {
       await this.props.registerForPushNotificationsAsync(props.user._id)
       console.log('ready to continue')
