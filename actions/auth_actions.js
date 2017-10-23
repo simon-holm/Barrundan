@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { AsyncStorage } from 'react-native'
 import { Facebook, Permissions, Notifications } from 'expo'
-
+import { ShowErrorAlert } from '../helpers/alert'
 // Actions types
 export const FACEBOOK_LOGIN_SUCCESS = 'facebook_login_success'
 export const FACEBOOK_LOGIN_FAIL = 'facebook_login_fail'
@@ -9,7 +9,7 @@ export const REMOVE_FB_TOKEN = 'remove_fb_token'
 export const SET_JWT = 'set_jwt'
 export const SET_USER = 'set_user'
 
-import { API_BASE_URL } from '../config/settings'
+import { API_BASE_URL, FB_ID } from '../config/settings'
 
 // AsyncStorage tar lite tid och är promised based. såå async await
 
@@ -28,10 +28,7 @@ export const facebookLogin = () => async dispatch => {
 
 const doFacebookLogin = async dispatch => {
   console.log('facebook login')
-  let {
-    type,
-    token
-  } = await Facebook.logInWithReadPermissionsAsync('285326111967936', {
+  let { type, token } = await Facebook.logInWithReadPermissionsAsync(FB_ID, {
     permissions: ['public_profile']
   })
 
@@ -53,10 +50,10 @@ export const removeToken = () => async dispatch => {
 export const barrundanCreateUser = () => async dispatch => {
   let fbToken = await AsyncStorage.getItem('fb_token')
   console.log('fb token in barrundanCreateUser', fbToken)
-
-  let { data } = await axios
-    .post(
-      API_BASE_URL + '/users', // localhost IP adress. störigt
+  let result
+  try {
+    let { data } = await axios.post(
+      API_BASE_URL + '/user',
       {
         token: fbToken
       },
@@ -66,10 +63,14 @@ export const barrundanCreateUser = () => async dispatch => {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     )
-    .catch(e => console.log(e))
+    result = data
+  } catch (e) {
+    console.log(e)
+    ShowErrorAlert()
+  }
 
-  const token = data.token
-  const user = data.user
+  const token = result.token
+  const user = result.user
 
   await AsyncStorage.setItem('user', JSON.stringify(user))
   await AsyncStorage.setItem('jwt', token)

@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, Alert } from 'react-native'
+import { ShowErrorAlert } from '../helpers/alert'
 
 // Action types
 export const FETCH_PARTICIPANTS = 'fetch_participants'
@@ -14,18 +15,25 @@ export const fetchBarrunda = () => async dispatch => {
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
-    let { data } = await axios
-      .get(API_BASE_URL + '/barrunda', {
+    let result
+    try {
+      let data = await axios.get(API_BASE_URL + '/barrunda', {
         headers: {
           Accept: 'application/json',
           Authorization: authString
         }
       })
-      .catch(e => console.log(e))
-    if (data) {
+      result = data
+      console.log(result)
+    } catch (e) {
+      console.log(e)
+      ShowErrorAlert()
+    }
+
+    if (result) {
       dispatch({
         type: FETCH_BARRUNDA,
-        payload: data
+        payload: result
       })
     }
   }

@@ -44,13 +44,14 @@ class Mainscreen extends Component {
       })
     }
     await this.props.fetchBarrunda()
-    await this.props.fetchCurrentBar(this.props.barrunda._id)
-    await this.props.fetchParticipants(this.props.barrunda._id)
-    this.props.participants.map(participant => {
+
+    // await this.props.fetchCurrentBar(this.props.barrunda._id)
+    // await this.props.fetchParticipants(this.props.barrunda._id)
+    /* this.props.participants.map(participant => {
       if (participant._id === this.props.user._id) {
         this.props.userAlreadyJoinedBarrunda()
       }
-    })
+    })*/
   }
   componentDidMount() {
     console.log('Main mountades')
