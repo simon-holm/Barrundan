@@ -32,7 +32,7 @@ class Mainscreen extends Component {
     loading: false
   }
   async refresh() {
-    console.log("laaddda omm dåååååååå")
+    console.log('laaddda omm dåååååååå')
     await this.props.fetchBarrunda()
     await this.props.fetchCurrentBar(this.props.barrunda._id)
     await this.props.fetchParticipants(this.props.barrunda._id)
@@ -102,9 +102,9 @@ class Mainscreen extends Component {
       return (
         <BarScroll
           bars={this.props.barrunda.bars}
-          barMapClick={async (bar) => {
-            if(bar._id != this.props.currentBar._id){
-               await this.props.fetchCurrentBar()
+          barMapClick={async bar => {
+            if (bar._id != this.props.currentBar._id) {
+              await this.props.fetchCurrentBar()
             }
             this.props.navigation.navigate('map')
           }}
