@@ -37,7 +37,7 @@ class Slides extends Component {
                 height: 350
               }}
             />
-            <Text
+            {/*<Text
               style={{
                 fontSize: 30,
                 color: 'white',
@@ -47,18 +47,8 @@ class Slides extends Component {
               }}
             >
               Välkommen!
-            </Text>
-            <Text
-              style={{
-                fontSize: 20,
-                color: '#CCCCCC',
-                marginLeft: 15,
-                marginRight: 15,
-                textAlign: 'center'
-              }}
-            >
-              Kom igång >>
-            </Text>
+            </Text>*/}
+            {this.renderLastSlide(index)}
           </View>
         )
       }
@@ -77,11 +67,12 @@ class Slides extends Component {
           <View>
             <Image
               resizeMode={'contain'}
-              source={require('../assets/icons/beer-loader.gif')}
+              source={require('../assets/icons/loading-icon.gif')}
               style={{
                 width: SCREEN_WIDTH,
                 alignSelf: 'center',
-                height: 350
+                height: 250,
+                marginTop: 50
               }}
             />
           </View>
