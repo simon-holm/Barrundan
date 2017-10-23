@@ -6,13 +6,13 @@ import { View, Text, AsyncStorage } from 'react-native'
 import Slides from '../components/Slides'
 
 const SLIDE_DATA = [
-  { text: 'logga', color: '#13213a' },
-  {
-    text: 'Barrunda i Malmö',
-    text2: 'Varje lördag klockan 20:00',
-    text3: 'Häng med!',
-    color: '#5db596'
-  }
+  { text: 'logga', color: '#13213a' }
+  // {
+  //   text: 'Barrunda i Malmö',
+  //   text2: 'Varje lördag klockan 20:00',
+  //   text3: 'Häng med!',
+  //   color: '#13213a'
+  // }
 ]
 
 class WelcomeScreen extends Component {
