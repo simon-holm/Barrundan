@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, View, StyleSheet, Dimensions } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Button, Icon } from 'react-native-elements'
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 class BarScroll extends Component {
@@ -59,6 +59,7 @@ class BarScroll extends Component {
               return (
                 <View style={styles.barInfoWrapper} key={bar.name}>
                   <View style={styles.barInfoCard}>
+                    <Text style={styles.barInfoText}>{bar.name}</Text>
                     <Text style={styles.barInfoText}>Denna är övvver!</Text>
                   </View>
                 </View>
@@ -67,7 +68,22 @@ class BarScroll extends Component {
               return (
                 <View style={styles.barInfoWrapper} key={bar.name}>
                   <View style={styles.barInfoCard}>
-                    <Text style={styles.barInfoText}>???</Text>
+                    <Icon
+                      raised
+                      size={28}
+                      name="question-circle-o"
+                      type="font-awesome"
+                      color="rgb(62, 92, 118)"
+                      iconStyle={{ fontSize: 56 }}
+                    />
+                    <Text
+                      style={[
+                        styles.barInfoText,
+                        { marginBottom: 0, fontSize: 16 }
+                      ]}
+                    >
+                      Bar {index + 1}
+                    </Text>
                   </View>
                 </View>
               )
