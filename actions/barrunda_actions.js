@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { AsyncStorage, Alert } from 'react-native'
-import { ShowErrorAlert } from '../helpers/alert'
+import { showErrorAlert } from './alert_actions'
 
 // Action types
 export const FETCH_PARTICIPANTS = 'fetch_participants'
@@ -17,7 +17,7 @@ export const fetchBarrunda = () => async dispatch => {
     const authString = 'Bearer ' + jwtToken
     let result
     try {
-      let data = await axios.get(API_BASE_URL + '/barrunda', {
+      let { data } = await axios.get(API_BASE_URL + '/barrunda', {
         headers: {
           Accept: 'application/json',
           Authorization: authString
@@ -27,7 +27,7 @@ export const fetchBarrunda = () => async dispatch => {
       console.log(result)
     } catch (e) {
       console.log(e)
-      ShowErrorAlert()
+      return dispatch(showErrorAlert())
     }
 
     if (result) {
@@ -40,12 +40,11 @@ export const fetchBarrunda = () => async dispatch => {
 }
 
 export const userJoinBarrunda = (userId, barrundaId) => async dispatch => {
-  console.log('user join barrunda!')
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
-    let { status } = await axios
-      .post(
+    try {
+      await axios.post(
         API_BASE_URL + '/barrunda/participants',
         {
           userId: userId,
@@ -58,15 +57,15 @@ export const userJoinBarrunda = (userId, barrundaId) => async dispatch => {
           }
         }
       )
-      .catch(e => console.log(e))
-
-    // KALLA PÅ fetchParticipants här ???
-    console.log(status)
-    if (status === 200) {
-      dispatch({
-        type: USER_JOIN_SUCCESS
-      })
+    } catch (e) {
+      console.log(e)
+      return dispatch(showErrorAlert())
     }
+
+    dispatch({
+      type: USER_JOIN_SUCCESS
+    })
+    dispatch(fetchParticipants(barrundaId))
   }
 }
 
@@ -83,20 +82,27 @@ export const fetchParticipants = barrundaId => async dispatch => {
 
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
-    let { data } = await axios
-      .get(API_BASE_URL + '/barrunda/participants/' + barrundaId, {
-        headers: {
-          Accept: 'application/json',
-          Authorization: authString,
-          'Content-Type': 'application/x-www-form-urlencoded'
+    let result
+    try {
+      let { data } = await axios.get(
+        API_BASE_URL + '/barrunda/participants/' + barrundaId,
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: authString,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
         }
-      })
-      .catch(e => console.log(e))
-
-    if (data) {
+      )
+      result = data
+    } catch (e) {
+      console.log(e)
+      return dispatch(showErrorAlert())
+    }
+    if (result) {
       dispatch({
         type: FETCH_PARTICIPANTS,
-        payload: data
+        payload: result
       })
     }
   }
@@ -106,26 +112,35 @@ export const clearOldBarrunda = () => dispatch => {
   dispatch({ type: CLEAR_BARRUNDA })
 }
 
+
 export const fetchCurrentBar = barrundaId => async dispatch => {
   console.log('fetch current bar')
   let jwtToken = await AsyncStorage.getItem('jwt')
 
   if (jwtToken) {
+    let result
     const authString = 'Bearer ' + jwtToken
-    let { data } = await axios
-      .get(API_BASE_URL + '/barrunda/bar/' + barrundaId, {
-        headers: {
-          Accept: 'application/json',
-          Authorization: authString,
-          'Content-Type': 'application/x-www-form-urlencoded'
+    try {
+      let { data } = await axios.get(
+        API_BASE_URL + '/barrunda/bar/' + barrundaId,
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: authString,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
         }
-      })
-      .catch(e => console.log(e))
+      )
+      result = data
+    } catch (e) {
+      console.log(e)
+      return dispatch(showErrorAlert())
+    }
 
-    if (data) {
+    if (result) {
       dispatch({
         type: FETCH_CURRENT_BAR,
-        payload: data
+        payload: result
       })
     }
   }

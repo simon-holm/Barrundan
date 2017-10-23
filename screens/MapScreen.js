@@ -23,16 +23,7 @@ class MapScreen extends Component {
       longitudeDelta: 0.005 // standard 0.04
     }
   }
-  // componentWillReceiveProps(newProps) {
-  //   this.setState({
-  //     region: {
-  //       latitude: newProps.currentBar.location.lat,
-  //       longitude: newProps.currentBar.location.lng,
-  //       latitudeDelta: 0.01125,
-  //       longitudeDelta: 0.005
-  //     }
-  //   })
-  // }
+
   componentDidMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       console.log('error')
