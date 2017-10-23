@@ -24,7 +24,7 @@ class BarScroll extends Component {
   render() {
     return (
       <ScrollView
-        style={{ flex: 1 }}
+        style={styles.container}
         horizontal
         pagingEnabled
         contentOffset={{ x: 2, y: 0 }}
@@ -34,21 +34,18 @@ class BarScroll extends Component {
           if (this.isActive(bar) || (index == 0 && !this.isActive(bar))) {
             return (
               <View key={bar.name} style={styles.barInfoWrapper}>
-                <View
-                  style={[
-                    styles.barInfoCard,
-                    { borderColor: '#FF934F', borderWidth: 0.5 }
-                  ]}
-                >
+                <View style={styles.barInfoCard}>
                   <Text style={styles.barInfoText}>{bar.name}</Text>
                   <Button
                     icon={{ name: 'location-on', color: '#dddddd', size: 22 }}
                     title="Visa karta"
                     buttonStyle={{
-                      backgroundColor: '#3E5C76',
+                      backgroundColor: 'transparent',
                       borderRadius: 50,
                       width: 150,
-                      height: 45
+                      height: 45,
+                      borderColor: '#dddddd',
+                      borderWidth: 0.8
                     }}
                     fontSize={15}
                     textStyle={{ textAlign: 'center', color: '#dddddd' }}
@@ -84,34 +81,30 @@ class BarScroll extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    paddingLeft: 5,
-    paddingRight: 5,
-    marginTop: 10
+    flex: 1
   },
   barInfoWrapper: {
-    paddingLeft: 10,
-    paddingRight: 10,
+    flex: 1,
     width: SCREEN_WIDTH,
-    alignItems: 'center',
-    height: 330
+    alignItems: 'center'
   },
   barInfoCard: {
-    marginRight: 5,
-    width: SCREEN_WIDTH - 20,
-    height: 150,
+    flex: 1,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 10,
+    paddingBottom: 20,
+    width: SCREEN_WIDTH - 30,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(41, 71, 124, 0.5)',
-    borderRadius: 10
+    backgroundColor: 'rgba(62, 92, 118, 0.2)',
+    borderRadius: 10,
+    borderColor: 'white',
+    borderWidth: 0
   },
   barInfoText: {
     color: '#dddddd',
-    fontSize: 26,
+    fontSize: 22,
     marginBottom: 20
   }
 })

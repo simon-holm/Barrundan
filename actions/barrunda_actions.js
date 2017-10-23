@@ -6,6 +6,7 @@ import { showErrorAlert } from './alert_actions'
 export const FETCH_PARTICIPANTS = 'fetch_participants'
 export const FETCH_BARRUNDA = 'fetch_barrunda'
 export const USER_JOIN_SUCCESS = 'user_join_success'
+export const USER_JOIN_FAIL = 'user_join_fail'
 export const CLEAR_BARRUNDA = 'clear_barrunda'
 export const FETCH_CURRENT_BAR = 'fetch_current_bar'
 
@@ -75,6 +76,12 @@ export const userAlreadyJoinedBarrunda = () => dispatch => {
   })
 }
 
+export const userHasNotJoinedBarrunda = () => dispatch => {
+  dispatch({
+    type: USER_JOIN_FAIL
+  })
+}
+
 export const fetchParticipants = barrundaId => async dispatch => {
   console.log('fetch participants')
 
@@ -111,7 +118,6 @@ export const fetchParticipants = barrundaId => async dispatch => {
 export const clearOldBarrunda = () => dispatch => {
   dispatch({ type: CLEAR_BARRUNDA })
 }
-
 
 export const fetchCurrentBar = barrundaId => async dispatch => {
   console.log('fetch current bar')

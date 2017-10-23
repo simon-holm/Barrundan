@@ -24,7 +24,8 @@ import {
   fetchBarrunda,
   clearOldBarrunda,
   fetchCurrentBar,
-  userAlreadyJoinedBarrunda
+  userAlreadyJoinedBarrunda,
+  userHasNotJoinedBarrunda
 } from '../actions/barrunda_actions'
 
 class Mainscreen extends Component {
@@ -36,11 +37,22 @@ class Mainscreen extends Component {
     await this.props.fetchBarrunda()
     await this.props.fetchCurrentBar(this.props.barrunda._id)
     await this.props.fetchParticipants(this.props.barrunda._id)
+    let status = []
     this.props.participants.map(participant => {
       if (participant._id === this.props.user._id) {
-        this.props.userAlreadyJoinedBarrunda()
+        status.push(true)
+      } else {
+        status.push(false)
       }
     })
+    if (status.includes(true)) {
+      this.props.userAlreadyJoinedBarrunda()
+      console.log('du är joinad')
+    } else {
+      this.props.userHasNotJoinedBarrunda()
+      console.log('du är inte joinad')
+    }
+    console.log(status)
   }
   async componentWillMount() {
     let pushToken = await AsyncStorage.getItem('pushToken')
@@ -100,15 +112,17 @@ class Mainscreen extends Component {
       )
     } else {
       return (
-        <BarScroll
-          bars={this.props.barrunda.bars}
-          barMapClick={async bar => {
-            if (bar._id != this.props.currentBar._id) {
-              await this.props.fetchCurrentBar()
-            }
-            this.props.navigation.navigate('map')
-          }}
-        />
+        <View style={styles.barInfoWrapper}>
+          <BarScroll
+            bars={this.props.barrunda.bars}
+            barMapClick={async bar => {
+              if (bar._id != this.props.currentBar._id) {
+                await this.props.fetchCurrentBar()
+              }
+              this.props.navigation.navigate('map')
+            }}
+          />
+        </View>
       )
     }
   }
@@ -201,7 +215,7 @@ const styles = StyleSheet.create({
   textSecond: {
     color: '#dddddd',
     fontSize: 20,
-    marginTop: 30,
+    marginTop: 20,
     alignSelf: 'center'
   },
   joinButton: {
@@ -210,13 +224,11 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20
   },
-  barNumberText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    marginBottom: 5
+  barInfoWrapper: {
+    flex: 1
   },
   loadingIcon: {
-    marginTop: 30,
+    marginTop: 10,
     flex: 1
   },
   participantList: {
@@ -243,5 +255,6 @@ export default connect(mapStateToProps, {
   fetchBarrunda,
   clearOldBarrunda,
   fetchCurrentBar,
-  userAlreadyJoinedBarrunda
+  userAlreadyJoinedBarrunda,
+  userHasNotJoinedBarrunda
 })(Mainscreen)
