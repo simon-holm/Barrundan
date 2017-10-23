@@ -67,7 +67,7 @@ class Slides extends Component {
           <View>
             <Image
               resizeMode={'contain'}
-              source={require('../assets/icons/loading-icon.gif')}
+              source={require('../assets/icons/barrundan.png')}
               style={{
                 width: SCREEN_WIDTH,
                 alignSelf: 'center',
