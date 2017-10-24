@@ -20,7 +20,6 @@ class BarScroll extends Component {
       return false
     }
   }
-
   slideToBar = barNumber => {
     this.slideScroll.scrollTo({
       x: SCREEN_WIDTH * barNumber,
@@ -28,7 +27,15 @@ class BarScroll extends Component {
       animated: true
     })
   }
-
+  componentWillReceiveProps(newProps) {
+    if (newProps.currentBar._id !== this.props.currentBar._id) {
+      this.props.bars.map((bar, index) => {
+        if (bar._id === newProps.currentBar._id) {
+          this.slideToBar(index + 1)
+        }
+      })
+    }
+  }
   showRightIcon = index => {
     if (index !== 3) {
       return (
@@ -114,8 +121,17 @@ class BarScroll extends Component {
               return (
                 <View style={styles.barInfoWrapper} key={bar.name}>
                   <View style={styles.barInfoCard}>
-                    <Text style={styles.barInfoText}>{bar.name}</Text>
-                    <Text style={styles.barInfoText}>Denna är övvver!</Text>
+                    <Text style={[styles.barInfoText, { color: 'gray' }]}>
+                      {bar.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.barInfoText,
+                        { color: 'gray', fontSize: 16 }
+                      ]}
+                    >
+                      Barrundan har redan varit här :(
+                    </Text>
                     {this.showRightIcon(index)}
                     {this.showLeftIcon(index)}
                   </View>

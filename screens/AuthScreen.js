@@ -10,12 +10,11 @@ import {
 } from '../actions/auth_actions'
 
 class AuthScreen extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     console.log('AuthScreen mount', this.props)
-    this.props.facebookLogin()
+    await this.props.facebookLogin()
     this.onAuthComplete(this.props)
   }
-
   componentWillReceiveProps(nextProps) {
     console.log('auth received props', nextProps)
     this.onAuthComplete(nextProps)
@@ -33,9 +32,9 @@ class AuthScreen extends Component {
       await this.props.registerForPushNotificationsAsync(props.user._id)
       console.log('ready to continue')
       this.props.navigation.navigate('main')
+    } else if (!props.token) {
+      this.props.navigation.navigate('welcome')
     }
-
-    //this.props.removeToken()
   }
 
   render() {

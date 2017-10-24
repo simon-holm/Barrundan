@@ -10,7 +10,8 @@ import {
   ActivityIndicator,
   Alert,
   AsyncStorage,
-  Image
+  Image,
+  RefreshControl
 } from 'react-native'
 import { Button } from 'react-native-elements'
 
@@ -30,10 +31,10 @@ import {
 
 class Mainscreen extends Component {
   state = {
-    loading: false
+    loading: false,
+    refreshing: false
   }
   async refresh() {
-    console.log('laaddda omm dåååååååå')
     await this.props.fetchBarrunda()
     await this.props.fetchCurrentBar(this.props.barrunda._id)
     await this.props.fetchParticipants(this.props.barrunda._id)
@@ -47,12 +48,15 @@ class Mainscreen extends Component {
     })
     if (status.includes(true)) {
       this.props.userAlreadyJoinedBarrunda()
-      console.log('du är joinad')
     } else {
       this.props.userHasNotJoinedBarrunda()
-      console.log('du är inte joinad')
     }
-    console.log(status)
+  }
+  _onRefresh = () => {
+    this.setState({ refreshing: true })
+    this.refresh().then(() => {
+      this.setState({ refreshing: false })
+    })
   }
   async componentWillMount() {
     let pushToken = await AsyncStorage.getItem('pushToken')
@@ -65,14 +69,13 @@ class Mainscreen extends Component {
         }
       })
     }
-
     this.setState({ loading: true })
     await this.refresh()
     this.setState({ loading: false })
 
     this.refreshInterval = setInterval(async () => {
       await this.refresh()
-    }, 30000)
+    }, 60000)
   }
 
   componentWillUnmount() {
@@ -115,6 +118,7 @@ class Mainscreen extends Component {
         <View style={styles.barInfoWrapper}>
           <BarScroll
             bars={this.props.barrunda.bars}
+            currentBar={this.props.currentBar}
             barMapClick={async bar => {
               if (bar._id != this.props.currentBar._id) {
                 await this.props.fetchCurrentBar()
@@ -125,6 +129,25 @@ class Mainscreen extends Component {
         </View>
       )
     }
+  }
+  renderSubtitle = () => {
+    return this.props.barrunda.bars.map((bar, index) => {
+      if (bar._id === this.props.currentBar._id) {
+        if (index === 0) {
+          return (
+            <Text key={index} style={styles.text}>
+              Startar om
+            </Text>
+          )
+        } else {
+          return (
+            <Text key={index} style={styles.text}>
+              Nästa bar om
+            </Text>
+          )
+        }
+      }
+    })
   }
   render() {
     const { container, text, textSecond, participantList } = styles
@@ -146,7 +169,17 @@ class Mainscreen extends Component {
           marginBottom: 15
         }
     return (
-      <ScrollView style={container}>
+      <ScrollView
+        style={container}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+            tintColor="#FF934F"
+            progressBackgroundColor="#FF934F"
+          />
+        }
+      >
         <Image
           resizeMode={'contain'}
           source={require('../assets/icons/barrundan.png')}
@@ -154,8 +187,8 @@ class Mainscreen extends Component {
         />
         {this.props.barrunda ? (
           <View>
-            <Text style={text}>Startar om</Text>
-            <Timer startTime={this.props.barrunda.startTime} />
+            {this.renderSubtitle()}
+            <Timer startTime={this.props.currentBar.startTime} />
           </View>
         ) : null}
         {this.renderBarinfo()}
