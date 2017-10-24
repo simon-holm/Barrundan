@@ -6,7 +6,15 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 class BarScroll extends Component {
   isActive(bar) {
     const now = new Date()
-    if (now >= bar.startTime && now < bar.endTime) {
+    if (now >= new Date(bar.startTime) && now < new Date(bar.endTime)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  isBefore(bar) {
+    const now = new Date()
+    if (now < new Date(bar.startTime)) {
       return true
     } else {
       return false
@@ -14,7 +22,7 @@ class BarScroll extends Component {
   }
   isPast(bar) {
     const now = new Date()
-    if (now > bar.endTime) {
+    if (now > new Date(bar.endTime)) {
       return true
     } else {
       return false
@@ -27,14 +35,16 @@ class BarScroll extends Component {
       animated: true
     })
   }
+  componentDidMount() {
+    this.props.refresh()
+  }
   componentWillReceiveProps(newProps) {
-    if (newProps.currentBar._id !== this.props.currentBar._id) {
-      this.props.bars.map((bar, index) => {
-        if (bar._id === newProps.currentBar._id) {
-          this.slideToBar(index + 1)
-        }
-      })
-    }
+    console.log('Bar scrollen fick props')
+    this.props.bars.map((bar, index) => {
+      if (bar._id === newProps.currentBar._id) {
+        this.slideToBar(index)
+      }
+    })
   }
   showRightIcon = index => {
     if (index !== 3) {
@@ -88,10 +98,7 @@ class BarScroll extends Component {
         indicatorStyle="white"
       >
         {this.props.bars.map((bar, index) => {
-          if (
-            this.isActive(bar) ||
-            (index == 0 && !this.isActive(bar) && !this.isPast(bar))
-          ) {
+          if (this.isActive(bar) || (index === 0 && this.isBefore(bar))) {
             return (
               <View key={bar.name} style={styles.barInfoWrapper}>
                 <View style={styles.barInfoCard}>

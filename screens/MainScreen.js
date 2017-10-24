@@ -34,7 +34,7 @@ class Mainscreen extends Component {
     loading: false,
     refreshing: false
   }
-  async refresh() {
+  refresh = async () => {
     await this.props.fetchBarrunda()
     await this.props.fetchCurrentBar(this.props.barrunda._id)
     await this.props.fetchParticipants(this.props.barrunda._id)
@@ -59,6 +59,7 @@ class Mainscreen extends Component {
     })
   }
   async componentWillMount() {
+    console.log(this.props)
     let pushToken = await AsyncStorage.getItem('pushToken')
     if (pushToken) {
       Notifications.addListener(notification => {
@@ -119,6 +120,7 @@ class Mainscreen extends Component {
           <BarScroll
             bars={this.props.barrunda.bars}
             currentBar={this.props.currentBar}
+            refresh={this.refresh}
             barMapClick={async bar => {
               if (bar._id != this.props.currentBar._id) {
                 await this.props.fetchCurrentBar()
@@ -130,13 +132,40 @@ class Mainscreen extends Component {
       )
     }
   }
+  isBarNotActiveYet(bar) {
+    const now = new Date()
+    if (now < new Date(bar.startTime)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  renderTime = () => {
+    let time
+    this.props.barrunda.bars.map((bar, index) => {
+      if (bar._id === this.props.currentBar._id) {
+        if (index === 0 && this.isBarNotActiveYet(bar)) {
+          time = bar.startTime
+        } else {
+          time = bar.endTime
+        }
+      }
+    })
+    return time
+  }
   renderSubtitle = () => {
     return this.props.barrunda.bars.map((bar, index) => {
       if (bar._id === this.props.currentBar._id) {
-        if (index === 0) {
+        if (index === 0 && this.isBarNotActiveYet(bar)) {
           return (
             <Text key={index} style={styles.text}>
               Startar om
+            </Text>
+          )
+        } else if (index === 3) {
+          return (
+            <Text key={index} style={styles.text}>
+              Är slut om
             </Text>
           )
         } else {
@@ -188,7 +217,7 @@ class Mainscreen extends Component {
         {this.props.barrunda ? (
           <View>
             {this.renderSubtitle()}
-            <Timer startTime={this.props.currentBar.startTime} />
+            <Timer refresh={this.refresh} startTime={this.renderTime()} />
           </View>
         ) : null}
         {this.renderBarinfo()}

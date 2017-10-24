@@ -25,7 +25,6 @@ export const fetchBarrunda = () => async dispatch => {
         }
       })
       result = data
-      console.log(result)
     } catch (e) {
       console.log(e)
       return dispatch(showErrorAlert())
