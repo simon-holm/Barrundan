@@ -36,6 +36,7 @@ class BarScroll extends Component {
     })
   }
   componentDidMount() {
+    // Issue med scrollTo på mount så detta gör så att component receivar props på mount.
     this.props.refresh()
   }
   componentWillReceiveProps(newProps) {
