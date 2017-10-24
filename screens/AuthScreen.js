@@ -19,7 +19,6 @@ class AuthScreen extends Component {
     console.log('auth received props', nextProps)
     this.onAuthComplete(nextProps)
   }
-
   async onAuthComplete(props) {
     // finns både facebook token och jwt så är vi välkomna in
     // annars måste vi skapa användaren i barrundan API
@@ -33,7 +32,8 @@ class AuthScreen extends Component {
       console.log('ready to continue')
       this.props.navigation.navigate('main')
     } else if (!props.token) {
-      this.props.navigation.navigate('welcome')
+      await this.props.facebookLogin()
+      this.onAuthComplete(this.props)
     }
   }
 
