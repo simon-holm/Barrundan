@@ -21,17 +21,70 @@ class BarScroll extends Component {
     }
   }
 
+  slideToBar = barNumber => {
+    this.slideScroll.scrollTo({
+      x: SCREEN_WIDTH * barNumber,
+      y: 0,
+      animated: true
+    })
+  }
+
+  showRightIcon = index => {
+    if (index !== 3) {
+      return (
+        <Icon
+          size={32}
+          name="chevron-right"
+          type="material-community"
+          color="rgba(221, 221, 221, 0.1)"
+          underlayColor="transparent"
+          containerStyle={{
+            position: 'absolute',
+            top: 45,
+            right: 0
+          }}
+          onPress={() => this.slideToBar(index + 1)}
+        />
+      )
+    }
+  }
+
+  showLeftIcon = index => {
+    if (index !== 0) {
+      return (
+        <Icon
+          size={32}
+          name="chevron-left"
+          type="material-community"
+          color="rgba(221, 221, 221, 0.1)"
+          underlayColor="transparent"
+          containerStyle={{
+            position: 'absolute',
+            top: 45,
+            left: 0
+          }}
+          onPress={() => this.slideToBar(index - 1)}
+        />
+      )
+    }
+  }
+
   render() {
     return (
       <ScrollView
+        ref={scroller => {
+          this.slideScroll = scroller
+        }}
         style={styles.container}
         horizontal
         pagingEnabled
-        contentOffset={{ x: 2, y: 0 }}
         indicatorStyle="white"
       >
         {this.props.bars.map((bar, index) => {
-          if (this.isActive(bar) || (index == 0 && !this.isActive(bar))) {
+          if (
+            this.isActive(bar) ||
+            (index == 0 && !this.isActive(bar) && !this.isPast(bar))
+          ) {
             return (
               <View key={bar.name} style={styles.barInfoWrapper}>
                 <View style={styles.barInfoCard}>
@@ -51,6 +104,8 @@ class BarScroll extends Component {
                     textStyle={{ textAlign: 'center', color: '#dddddd' }}
                     onPress={() => this.props.barMapClick(bar)}
                   />
+                  {this.showRightIcon(index)}
+                  {this.showLeftIcon(index)}
                 </View>
               </View>
             )
@@ -61,6 +116,8 @@ class BarScroll extends Component {
                   <View style={styles.barInfoCard}>
                     <Text style={styles.barInfoText}>{bar.name}</Text>
                     <Text style={styles.barInfoText}>Denna är övvver!</Text>
+                    {this.showRightIcon(index)}
+                    {this.showLeftIcon(index)}
                   </View>
                 </View>
               )
@@ -84,6 +141,8 @@ class BarScroll extends Component {
                     >
                       Bar {index + 1}
                     </Text>
+                    {this.showRightIcon(index)}
+                    {this.showLeftIcon(index)}
                   </View>
                 </View>
               )
@@ -106,6 +165,7 @@ const styles = StyleSheet.create({
   },
   barInfoCard: {
     flex: 1,
+    position: 'relative',
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 10,

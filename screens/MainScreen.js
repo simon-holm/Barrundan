@@ -12,7 +12,7 @@ import {
   AsyncStorage,
   Image
 } from 'react-native'
-import { Button, Icon, List, ListItem, Card } from 'react-native-elements'
+import { Button } from 'react-native-elements'
 
 import Timer from '../components/Timer'
 import ParticipantsList from '../components/ParticipantsList'
