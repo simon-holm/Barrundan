@@ -33,7 +33,7 @@ class AuthScreen extends Component {
       this.props.navigation.navigate('main')
     } else if (!props.token) {
       await this.props.facebookLogin()
-      this.onAuthComplete(this.props)
+      this.onAuthComplete(props)
     }
   }
 

@@ -83,6 +83,11 @@ class Mainscreen extends Component {
     clearInterval(this.refreshInterval)
   }
 
+  newBarStarts = () => {
+    // Barrundan startar / ny bar - Göra något nice här?!
+    console.log('NYYY BAR!')
+    this.refresh()
+  }
   onUserJoinBarrunda = async () => {
     this.setState({ loading: true })
     await this.props.userJoinBarrunda(
@@ -178,25 +183,45 @@ class Mainscreen extends Component {
       }
     })
   }
+  isBarrundaFinished() {
+    if (this.props.barrunda) {
+      const endTime = new Date(this.props.barrunda.bars[3].endTime)
+      const now = new Date()
+      if (now > endTime) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
   render() {
-    const { container, text, textSecond, participantList } = styles
-    const imageStyle = !this.props.isJoined
-      ? {
-          width: 350,
-          flex: 1,
-          alignSelf: 'center',
-          height: 250,
-          marginTop: 20,
-          marginBottom: 20
-        }
-      : {
-          width: 200,
-          flex: 1,
-          alignSelf: 'center',
-          height: 130,
-          marginTop: 15,
-          marginBottom: 15
-        }
+    const {
+      container,
+      text,
+      textSecond,
+      participantList,
+      finishTextWrapper,
+      finishTextFirst,
+      finishTextSecond
+    } = styles
+    const imageStyle =
+      !this.props.isJoined || this.isBarrundaFinished()
+        ? {
+            width: 350,
+            flex: 1,
+            alignSelf: 'center',
+            height: 250,
+            marginTop: 20,
+            marginBottom: 20
+          }
+        : {
+            width: 200,
+            flex: 1,
+            alignSelf: 'center',
+            height: 130,
+            marginTop: 15,
+            marginBottom: 15
+          }
     return (
       <ScrollView
         style={container}
@@ -214,24 +239,43 @@ class Mainscreen extends Component {
           source={require('../assets/icons/barrundan.png')}
           style={imageStyle}
         />
-        {this.props.barrunda ? (
-          <View>
-            {this.renderSubtitle()}
-            <Timer refresh={this.refresh} startTime={this.renderTime()} />
-          </View>
-        ) : null}
-        {this.renderBarinfo()}
-
-        {this.props.participants.length > 0 ? (
-          <View style={participantList}>
-            <Text style={textSecond}>
-              {this.props.participants.length} deltagare
+        {this.isBarrundaFinished() ? (
+          <View style={finishTextWrapper}>
+            <Text style={finishTextFirst}>Veckans Barrunda är över</Text>
+            <Text style={finishTextSecond}>
+              Nästa Barrunda öppnar för anmälning
             </Text>
-            <ParticipantsList participants={this.props.participants} />
+            <Text
+              style={[finishTextSecond, { color: '#FF934F', fontSize: 18 }]}
+            >
+              Söndag kl 12:00
+            </Text>
           </View>
-        ) : null}
+        ) : (
+          <View>
+            {this.props.barrunda ? (
+              <View>
+                {this.renderSubtitle()}
+                <Timer
+                  newBarStarts={this.newBarStarts}
+                  startTime={this.renderTime()}
+                />
+              </View>
+            ) : null}
+            {this.renderBarinfo()}
 
-        {/* <View style={{ marginTop: 15 }}>
+            {this.props.participants.length > 0 ? (
+              <View style={participantList}>
+                <Text style={textSecond}>
+                  {this.props.participants.length} deltagare
+                </Text>
+                <ParticipantsList participants={this.props.participants} />
+              </View>
+            ) : null}
+          </View>
+        )
+
+        /* <View style={{ marginTop: 15 }}>
           <Button
             title="MAP"
             onPress={() => this.props.navigation.navigate('map')}
@@ -250,7 +294,8 @@ class Mainscreen extends Component {
             onPress={() => this.props.clearOldBarrunda()}
             style={{ marginTop: 10 }}
           />
-        </View> */}
+        </View> */
+        }
       </ScrollView>
     )
   }
@@ -296,6 +341,20 @@ const styles = StyleSheet.create({
   participantList: {
     marginTop: 5,
     alignItems: 'center'
+  },
+  finishTextWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  finishTextFirst: {
+    color: '#dddddd',
+    fontSize: 25,
+    marginBottom: 20
+  },
+  finishTextSecond: {
+    color: '#dddddd',
+    fontSize: 16
   }
 })
 
