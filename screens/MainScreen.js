@@ -11,13 +11,16 @@ import {
   Alert,
   AsyncStorage,
   Image,
-  RefreshControl
+  RefreshControl,
+  Dimensions
 } from 'react-native'
 import { Button } from 'react-native-elements'
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 import Timer from '../components/Timer'
 import ParticipantsList from '../components/ParticipantsList'
 import BarScroll from '../components/BarScroll'
+const SCREEN_WIDTH = Dimensions.get('window').width
 
 import {
   userJoinBarrunda,
@@ -85,7 +88,7 @@ class Mainscreen extends Component {
 
   newBarStarts = () => {
     // Barrundan startar / ny bar - Göra något nice här?!
-    console.log('NYYY BAR!')
+    this.refs.toast.show("Let's Go!", 3000)
     this.refresh()
   }
   onUserJoinBarrunda = async () => {
@@ -272,16 +275,13 @@ class Mainscreen extends Component {
                 <ParticipantsList participants={this.props.participants} />
               </View>
             ) : null}
+            <View style={{ marginTop: 15 }}>
+              <Button title="Toast" onPress={() => this.newBarStarts()} />
+            </View>
           </View>
         )
 
-        /* <View style={{ marginTop: 15 }}>
-          <Button
-            title="MAP"
-            onPress={() => this.props.navigation.navigate('map')}
-          />
-        </View>
-
+        /* 
         <View style={{ marginTop: 15 }}>
           <Button
             title="DEV SCREEN"
@@ -296,6 +296,22 @@ class Mainscreen extends Component {
           />
         </View> */
         }
+        <Toast
+          ref="toast"
+          style={{
+            backgroundColor: 'rgba(255, 147, 79, 1)',
+            width: SCREEN_WIDTH - 45,
+            height: 120,
+            borderRadius: 100,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          position="top"
+          positionValue={165}
+          fadeInDuration={700}
+          fadeOutDuration={700}
+          textStyle={{ color: '#13213a', fontSize: 45, alignSelf: 'center' }}
+        />
       </ScrollView>
     )
   }
