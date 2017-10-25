@@ -39,24 +39,25 @@ class Timer extends Component {
           ) {
             this.props.refresh()
             clearInterval(this.ticker)
+          } else {
+            let now = new Date()
+            let target = new Date(nextProps.startTime)
+            let difference = target.getTime() - now.getTime()
+            let seconds = Math.floor(difference / 1000)
+            let minutes = Math.floor(seconds / 60)
+            let hours = Math.floor(minutes / 60)
+            let days = Math.floor(hours / 24)
+            hours %= 24
+            minutes %= 60
+            seconds %= 60
+            clearInterval(this.loaderIntervall)
+            this.setState({
+              days,
+              hours,
+              minutes,
+              seconds
+            })
           }
-          let now = new Date()
-          let target = new Date(nextProps.startTime)
-          let difference = target.getTime() - now.getTime()
-          let seconds = Math.floor(difference / 1000)
-          let minutes = Math.floor(seconds / 60)
-          let hours = Math.floor(minutes / 60)
-          let days = Math.floor(hours / 24)
-          hours %= 24
-          minutes %= 60
-          seconds %= 60
-          clearInterval(this.loaderIntervall)
-          this.setState({
-            days,
-            hours,
-            minutes,
-            seconds
-          })
         }, 1000)
       } else {
         clearInterval(this.ticker)
