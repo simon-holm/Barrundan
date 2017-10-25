@@ -3,7 +3,8 @@ import {
   FETCH_BARRUNDA,
   USER_JOIN_SUCCESS,
   CLEAR_BARRUNDA,
-  FETCH_CURRENT_BAR
+  FETCH_CURRENT_BAR,
+  USER_JOIN_FAIL
 } from '../actions/barrunda_actions'
 
 INITIAL_STATE = {
@@ -21,6 +22,8 @@ export default function(state = INITIAL_STATE, action) {
       return { ...state, barrunda: action.payload }
     case USER_JOIN_SUCCESS:
       return { ...state, isJoined: true }
+    case USER_JOIN_FAIL:
+      return { ...state, isJoined: false }
     case CLEAR_BARRUNDA:
       return INITIAL_STATE
     case FETCH_CURRENT_BAR:

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { AppLoading, Font } from 'expo'
-import { View, Text, AsyncStorage } from 'react-native'
+import { View, Text, AsyncStorage, BackHandler } from 'react-native'
 
 import Slides from '../components/Slides'
 
@@ -18,6 +18,9 @@ const SLIDE_DATA = [
 class WelcomeScreen extends Component {
   state = { isReady: false }
 
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress')
+  }
   async fetchCache() {
     // Om man vill hämta något innan appen "startar", t.ex. requira bilder
     // denna funktioner tillåter bara "hämtningr, alltså inte setState eller navigering - Expo"
@@ -26,7 +29,16 @@ class WelcomeScreen extends Component {
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')
   }
+  androidBackButtonSetup = () => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      if (this.props.navigation.state.key !== 'main') {
+        this.props.navigation.navigate('main')
+        return true
+      }
+    })
+  }
   finishGettingCache = async () => {
+    this.androidBackButtonSetup()
     let token = await AsyncStorage.getItem('fb_token')
     let jwt = await AsyncStorage.getItem('jwt')
     console.log(jwt, token)

@@ -1,38 +1,37 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, Dimensions } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  ActivityIndicator
+} from 'react-native'
 
 class Timer extends Component {
   state = {
     days: 99,
     hours: 99,
     minutes: 99,
-    seconds: 99
+    seconds: 99,
+    loading: true
   }
   componentDidMount() {
-    // Lite humor nedräkning istället för en loader
-    this.loaderIntervall = setInterval(() => {
-      if (this.state.days <= 0) {
-        this.setState({
-          days: 99,
-          hours: 99,
-          minutes: 99,
-          seconds: 99
-        })
-      }
-      this.setState({
-        days: this.state.days - 1,
-        hours: this.state.hours - 1,
-        minutes: this.state.minutes - 1,
-        seconds: this.state.seconds - 1
-      })
-    }, 2)
+    this.startTicker()
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.startTime) {
-      this.ticker = setInterval(() => {
-        let now = new Date()
-        let target = new Date(nextProps.startTime)
-        let difference = target.getTime() - now.getTime()
+  startTicker = () => {
+    this.ticker = setInterval(() => {
+      let now = new Date()
+      let target = new Date(this.props.startTime)
+      let difference = target.getTime() - now.getTime()
+      if (difference <= 0) {
+        this.setState({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0
+        })
+        this.props.newBarStarts()
+      } else {
         let seconds = Math.floor(difference / 1000)
         let minutes = Math.floor(seconds / 60)
         let hours = Math.floor(minutes / 60)
@@ -40,15 +39,20 @@ class Timer extends Component {
         hours %= 24
         minutes %= 60
         seconds %= 60
-        clearInterval(this.loaderIntervall)
         this.setState({
           days,
           hours,
           minutes,
           seconds
         })
-      }, 1000)
-    }
+        if (this.state.loading) {
+          this.setState({
+            loading: false
+          })
+        }
+      }
+    }, 1000)
+    //this.setState({ loading: false })
   }
   componentWillUnmount() {
     clearInterval(this.ticker)
@@ -56,30 +60,37 @@ class Timer extends Component {
 
   render() {
     const { time, timeText, timerWrapper, timer } = styles
+    if (this.state.loading) {
+      return (
+        <View style={[timerWrapper, { height: 92 }]}>
+          <ActivityIndicator size={'large'} />
+        </View>
+      )
+    } else {
+      return (
+        <View style={timerWrapper}>
+          {this.state.days > 0 ? (
+            <View style={timer}>
+              <Text style={time}>{this.state.days}</Text>
+              <Text style={timeText}>Dagar</Text>
+            </View>
+          ) : null}
 
-    return (
-      <View style={timerWrapper}>
-        {this.state.days > 0 ? (
           <View style={timer}>
-            <Text style={time}>{this.state.days}</Text>
-            <Text style={timeText}>Dagar</Text>
+            <Text style={time}>{this.state.hours}</Text>
+            <Text style={timeText}>Timmar</Text>
           </View>
-        ) : null}
-
-        <View style={timer}>
-          <Text style={time}>{this.state.hours}</Text>
-          <Text style={timeText}>Timmar</Text>
+          <View style={timer}>
+            <Text style={time}>{this.state.minutes}</Text>
+            <Text style={timeText}>Minuter</Text>
+          </View>
+          <View style={timer}>
+            <Text style={time}>{this.state.seconds}</Text>
+            <Text style={timeText}>Sekunder</Text>
+          </View>
         </View>
-        <View style={timer}>
-          <Text style={time}>{this.state.minutes}</Text>
-          <Text style={timeText}>Minuter</Text>
-        </View>
-        <View style={timer}>
-          <Text style={time}>{this.state.seconds}</Text>
-          <Text style={timeText}>Sekunder</Text>
-        </View>
-      </View>
-    )
+      )
+    }
   }
 }
 const { height, width } = Dimensions.get('window')

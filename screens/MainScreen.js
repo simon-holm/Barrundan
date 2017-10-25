@@ -10,13 +10,17 @@ import {
   ActivityIndicator,
   Alert,
   AsyncStorage,
-  Image
+  Image,
+  RefreshControl,
+  Dimensions
 } from 'react-native'
-import { Button, Icon, List, ListItem, Card } from 'react-native-elements'
+import { Button } from 'react-native-elements'
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 import Timer from '../components/Timer'
 import ParticipantsList from '../components/ParticipantsList'
 import BarScroll from '../components/BarScroll'
+const SCREEN_WIDTH = Dimensions.get('window').width
 
 import {
   userJoinBarrunda,
@@ -24,25 +28,41 @@ import {
   fetchBarrunda,
   clearOldBarrunda,
   fetchCurrentBar,
-  userAlreadyJoinedBarrunda
+  userAlreadyJoinedBarrunda,
+  userHasNotJoinedBarrunda
 } from '../actions/barrunda_actions'
 
 class Mainscreen extends Component {
   state = {
-    loading: false
+    loading: false,
+    refreshing: false
   }
-  async refresh() {
-    console.log("laaddda omm dåååååååå")
+  refresh = async () => {
     await this.props.fetchBarrunda()
     await this.props.fetchCurrentBar(this.props.barrunda._id)
     await this.props.fetchParticipants(this.props.barrunda._id)
+    let status = []
     this.props.participants.map(participant => {
       if (participant._id === this.props.user._id) {
-        this.props.userAlreadyJoinedBarrunda()
+        status.push(true)
+      } else {
+        status.push(false)
       }
+    })
+    if (status.includes(true)) {
+      this.props.userAlreadyJoinedBarrunda()
+    } else {
+      this.props.userHasNotJoinedBarrunda()
+    }
+  }
+  _onRefresh = () => {
+    this.setState({ refreshing: true })
+    this.refresh().then(() => {
+      this.setState({ refreshing: false })
     })
   }
   async componentWillMount() {
+    console.log(this.props)
     let pushToken = await AsyncStorage.getItem('pushToken')
     if (pushToken) {
       Notifications.addListener(notification => {
@@ -53,20 +73,24 @@ class Mainscreen extends Component {
         }
       })
     }
-
     this.setState({ loading: true })
     await this.refresh()
     this.setState({ loading: false })
 
     this.refreshInterval = setInterval(async () => {
       await this.refresh()
-    }, 30000)
+    }, 60000)
   }
 
   componentWillUnmount() {
     clearInterval(this.refreshInterval)
   }
 
+  newBarStarts = () => {
+    // Barrundan startar / ny bar - Göra något nice här?!
+    this.refs.toast.show("Let's Go!", 3000)
+    this.refresh()
+  }
   onUserJoinBarrunda = async () => {
     this.setState({ loading: true })
     await this.props.userJoinBarrunda(
@@ -100,68 +124,164 @@ class Mainscreen extends Component {
       )
     } else {
       return (
-        <BarScroll
-          bars={this.props.barrunda.bars}
-          barMapClick={async (bar) => {
-            if(bar._id != this.props.currentBar._id){
-               await this.props.fetchCurrentBar()
-            }
-            this.props.navigation.navigate('map')
-          }}
-        />
+        <View style={styles.barInfoWrapper}>
+          <BarScroll
+            bars={this.props.barrunda.bars}
+            currentBar={this.props.currentBar}
+            refresh={this.refresh}
+            barMapClick={async bar => {
+              if (bar._id != this.props.currentBar._id) {
+                await this.props.fetchCurrentBar()
+              }
+              this.props.navigation.navigate('map')
+            }}
+          />
+        </View>
       )
     }
   }
+  isBarNotActiveYet(bar) {
+    const now = new Date()
+    if (now < new Date(bar.startTime)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  renderTime = () => {
+    let time
+    this.props.barrunda.bars.map((bar, index) => {
+      if (bar._id === this.props.currentBar._id) {
+        if (index === 0 && this.isBarNotActiveYet(bar)) {
+          time = bar.startTime
+        } else {
+          time = bar.endTime
+        }
+      }
+    })
+    return time
+  }
+  renderSubtitle = () => {
+    return this.props.barrunda.bars.map((bar, index) => {
+      if (bar._id === this.props.currentBar._id) {
+        if (index === 0 && this.isBarNotActiveYet(bar)) {
+          return (
+            <Text key={index} style={styles.text}>
+              Startar om
+            </Text>
+          )
+        } else if (index === 3) {
+          return (
+            <Text key={index} style={styles.text}>
+              Är slut om
+            </Text>
+          )
+        } else {
+          return (
+            <Text key={index} style={styles.text}>
+              Nästa bar om
+            </Text>
+          )
+        }
+      }
+    })
+  }
+  isBarrundaFinished() {
+    if (this.props.barrunda) {
+      const endTime = new Date(this.props.barrunda.bars[3].endTime)
+      const now = new Date()
+      if (now > endTime) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
   render() {
-    const { container, text, textSecond, participantList } = styles
-    const imageStyle = !this.props.isJoined
-      ? {
-          width: 350,
-          flex: 1,
-          alignSelf: 'center',
-          height: 250,
-          marginTop: 20,
-          marginBottom: 20
-        }
-      : {
-          width: 200,
-          flex: 1,
-          alignSelf: 'center',
-          height: 130,
-          marginTop: 15,
-          marginBottom: 15
-        }
+    const {
+      container,
+      text,
+      textSecond,
+      participantList,
+      finishTextWrapper,
+      finishTextFirst,
+      finishTextSecond
+    } = styles
+    const imageStyle =
+      !this.props.isJoined || this.isBarrundaFinished()
+        ? {
+            width: 350,
+            flex: 1,
+            alignSelf: 'center',
+            height: 250,
+            marginTop: 20,
+            marginBottom: 20
+          }
+        : {
+            width: 200,
+            flex: 1,
+            alignSelf: 'center',
+            height: 130,
+            marginTop: 15,
+            marginBottom: 15
+          }
     return (
-      <ScrollView style={container}>
+      <ScrollView
+        style={container}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+            tintColor="#FF934F"
+            progressBackgroundColor="#FF934F"
+          />
+        }
+      >
         <Image
           resizeMode={'contain'}
           source={require('../assets/icons/barrundan.png')}
           style={imageStyle}
         />
-        {this.props.barrunda ? (
-          <View>
-            <Text style={text}>Startar om</Text>
-            <Timer startTime={this.props.barrunda.startTime} />
-          </View>
-        ) : null}
-        {this.renderBarinfo()}
-
-        {this.props.participants.length > 0 ? (
-          <View style={participantList}>
-            <Text style={textSecond}>
-              {this.props.participants.length} deltagare
+        {this.isBarrundaFinished() ? (
+          <View style={finishTextWrapper}>
+            <Text style={finishTextFirst}>Veckans Barrunda är över</Text>
+            <Text style={finishTextSecond}>
+              Nästa Barrunda öppnar för anmälning
             </Text>
-            <ParticipantsList participants={this.props.participants} />
+            <Text
+              style={[finishTextSecond, { color: '#FF934F', fontSize: 18 }]}
+            >
+              Söndag kl 12:00
+            </Text>
           </View>
-        ) : null}
+        ) : (
+          <View>
+            {this.props.barrunda ? (
+              <View>
+                {this.renderSubtitle()}
+                <Timer
+                  newBarStarts={this.newBarStarts}
+                  startTime={this.renderTime()}
+                />
+              </View>
+            ) : null}
+            {this.renderBarinfo()}
 
-        {/* <View style={{ marginTop: 15 }}>
-          <Button
-            title="MAP"
-            onPress={() => this.props.navigation.navigate('map')}
-          />
-        </View>
+            {this.props.participants.length > 0 ? (
+              <View style={participantList}>
+                <Text style={textSecond}>
+                  {this.props.participants.length} deltagare
+                </Text>
+                <ParticipantsList participants={this.props.participants} />
+              </View>
+            ) : null}
+            <View style={{ marginTop: 15 }}>
+              <Button title="Toast" onPress={() => this.newBarStarts()} />
+            </View>
+          </View>
+        )
 
+        /* 
         <View style={{ marginTop: 15 }}>
           <Button
             title="DEV SCREEN"
@@ -174,7 +294,24 @@ class Mainscreen extends Component {
             onPress={() => this.props.clearOldBarrunda()}
             style={{ marginTop: 10 }}
           />
-        </View> */}
+        </View> */
+        }
+        <Toast
+          ref="toast"
+          style={{
+            backgroundColor: 'rgba(255, 147, 79, 1)',
+            width: SCREEN_WIDTH - 45,
+            height: 120,
+            borderRadius: 100,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          position="top"
+          positionValue={165}
+          fadeInDuration={700}
+          fadeOutDuration={700}
+          textStyle={{ color: '#13213a', fontSize: 45, alignSelf: 'center' }}
+        />
       </ScrollView>
     )
   }
@@ -201,7 +338,7 @@ const styles = StyleSheet.create({
   textSecond: {
     color: '#dddddd',
     fontSize: 20,
-    marginTop: 30,
+    marginTop: 20,
     alignSelf: 'center'
   },
   joinButton: {
@@ -210,18 +347,30 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20
   },
-  barNumberText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    marginBottom: 5
+  barInfoWrapper: {
+    flex: 1
   },
   loadingIcon: {
-    marginTop: 30,
+    marginTop: 10,
     flex: 1
   },
   participantList: {
     marginTop: 5,
     alignItems: 'center'
+  },
+  finishTextWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  finishTextFirst: {
+    color: '#dddddd',
+    fontSize: 25,
+    marginBottom: 20
+  },
+  finishTextSecond: {
+    color: '#dddddd',
+    fontSize: 16
   }
 })
 
@@ -243,5 +392,6 @@ export default connect(mapStateToProps, {
   fetchBarrunda,
   clearOldBarrunda,
   fetchCurrentBar,
-  userAlreadyJoinedBarrunda
+  userAlreadyJoinedBarrunda,
+  userHasNotJoinedBarrunda
 })(Mainscreen)

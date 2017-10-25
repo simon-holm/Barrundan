@@ -10,17 +10,15 @@ import {
 } from '../actions/auth_actions'
 
 class AuthScreen extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     console.log('AuthScreen mount', this.props)
-    this.props.facebookLogin()
+    await this.props.facebookLogin()
     this.onAuthComplete(this.props)
   }
-
   componentWillReceiveProps(nextProps) {
     console.log('auth received props', nextProps)
     this.onAuthComplete(nextProps)
   }
-
   async onAuthComplete(props) {
     // finns både facebook token och jwt så är vi välkomna in
     // annars måste vi skapa användaren i barrundan API
@@ -33,9 +31,10 @@ class AuthScreen extends Component {
       await this.props.registerForPushNotificationsAsync(props.user._id)
       console.log('ready to continue')
       this.props.navigation.navigate('main')
+    } else if (!props.token) {
+      await this.props.facebookLogin()
+      this.onAuthComplete(props)
     }
-
-    //this.props.removeToken()
   }
 
   render() {
