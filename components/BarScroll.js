@@ -36,11 +36,11 @@ class BarScroll extends Component {
     })
   }
   componentDidMount() {
-    // Issue med scrollTo på mount så detta gör så att component receivar props på mount.
+    // Issue med scrollTo på mount så detta gör så att component
+    // receivar props på mount och slidar till rätt bar
     this.props.refresh()
   }
   componentWillReceiveProps(newProps) {
-    console.log('Bar scrollen fick props')
     this.props.bars.map((bar, index) => {
       if (bar._id === newProps.currentBar._id) {
         this.slideToBar(index)

@@ -10,59 +10,54 @@ class Timer extends Component {
   }
   componentDidMount() {
     // Lite humor nedräkning istället för en loader
-    this.loaderIntervall = setInterval(() => {
-      if (this.state.days <= 0) {
+    // this.loaderIntervall = setInterval(() => {
+    //   if (this.state.days <= 0) {
+    //     this.setState({
+    //       days: 99,
+    //       hours: 99,
+    //       minutes: 99,
+    //       seconds: 99
+    //     })
+    //   }
+    //   this.setState({
+    //     days: this.state.days - 1,
+    //     hours: this.state.hours - 1,
+    //     minutes: this.state.minutes - 1,
+    //     seconds: this.state.seconds - 1
+    //   })
+    // }, 2)
+
+    this.startTicker()
+  }
+  startTicker = () => {
+    this.ticker = setInterval(() => {
+      let now = new Date()
+      let target = new Date(this.props.startTime)
+      let difference = target.getTime() - now.getTime()
+      if (difference <= 0) {
         this.setState({
-          days: 99,
-          hours: 99,
-          minutes: 99,
-          seconds: 99
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0
+        })
+        this.props.refresh()
+      } else {
+        let seconds = Math.floor(difference / 1000)
+        let minutes = Math.floor(seconds / 60)
+        let hours = Math.floor(minutes / 60)
+        let days = Math.floor(hours / 24)
+        hours %= 24
+        minutes %= 60
+        seconds %= 60
+        this.setState({
+          days,
+          hours,
+          minutes,
+          seconds
         })
       }
-      this.setState({
-        days: this.state.days - 1,
-        hours: this.state.hours - 1,
-        minutes: this.state.minutes - 1,
-        seconds: this.state.seconds - 1
-      })
-    }, 2)
-  }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.startTime) {
-      if (nextProps.startTime === this.props.startTime) {
-        this.ticker = setInterval(() => {
-          if (
-            this.state.days === 0 &&
-            this.state.hours === 0 &&
-            this.state.minutes === 0 &&
-            this.state.seconds === 0
-          ) {
-            this.props.refresh()
-            clearInterval(this.ticker)
-          } else {
-            let now = new Date()
-            let target = new Date(nextProps.startTime)
-            let difference = target.getTime() - now.getTime()
-            let seconds = Math.floor(difference / 1000)
-            let minutes = Math.floor(seconds / 60)
-            let hours = Math.floor(minutes / 60)
-            let days = Math.floor(hours / 24)
-            hours %= 24
-            minutes %= 60
-            seconds %= 60
-            clearInterval(this.loaderIntervall)
-            this.setState({
-              days,
-              hours,
-              minutes,
-              seconds
-            })
-          }
-        }, 1000)
-      } else {
-        clearInterval(this.ticker)
-      }
-    }
+    }, 1000)
   }
   componentWillUnmount() {
     clearInterval(this.ticker)
