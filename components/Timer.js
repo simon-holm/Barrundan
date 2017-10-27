@@ -52,14 +52,13 @@ class Timer extends Component {
         }
       }
     }, 1000)
-    //this.setState({ loading: false })
   }
   componentWillUnmount() {
     clearInterval(this.ticker)
   }
-
   render() {
     const { time, timeText, timerWrapper, timer } = styles
+
     if (this.state.loading) {
       return (
         <View style={[timerWrapper, { height: 92 }]}>
@@ -94,7 +93,6 @@ class Timer extends Component {
   }
 }
 const { height, width } = Dimensions.get('window')
-
 const styles = StyleSheet.create({
   timerWrapper: {
     flex: 1,

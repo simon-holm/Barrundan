@@ -25,7 +25,6 @@ export const facebookLogin = () => async dispatch => {
 }
 
 const doFacebookLogin = async dispatch => {
-  console.log('facebook login')
   let { type, token } = await Facebook.logInWithReadPermissionsAsync(FB_ID, {
     permissions: ['public_profile']
   })
@@ -96,7 +95,6 @@ export const registerForPushNotificationsAsync = userId => async dispatch => {
       const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
       finalStatus = status
     }
-
     if (finalStatus !== 'granted') {
       return
     }

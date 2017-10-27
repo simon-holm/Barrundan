@@ -5,15 +5,8 @@ import { View, Text, AsyncStorage, BackHandler } from 'react-native'
 
 import Slides from '../components/Slides'
 
-const SLIDE_DATA = [
-  { text: 'logga', color: '#13213a' }
-  // {
-  //   text: 'Barrunda i Malmö',
-  //   text2: 'Varje lördag klockan 20:00',
-  //   text3: 'Häng med!',
-  //   color: '#13213a'
-  // }
-]
+// Data för varje slide
+const SLIDE_DATA = [{ text: 'logga', color: '#13213a' }]
 
 class WelcomeScreen extends Component {
   state = { isReady: false }
@@ -25,7 +18,6 @@ class WelcomeScreen extends Component {
     // Om man vill hämta något innan appen "startar", t.ex. requira bilder
     // denna funktioner tillåter bara "hämtningr, alltså inte setState eller navigering - Expo"
   }
-
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')
   }
@@ -41,7 +33,6 @@ class WelcomeScreen extends Component {
     this.androidBackButtonSetup()
     let token = await AsyncStorage.getItem('fb_token')
     let jwt = await AsyncStorage.getItem('jwt')
-    console.log(jwt, token)
 
     if (token && jwt) {
       console.log('navigeras till main')

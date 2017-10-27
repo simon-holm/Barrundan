@@ -27,7 +27,7 @@ export default class App extends Component {
             {
               lazy: true,
               swipeEnabled: false,
-              animationEnabled: false, // Sätt TRUE sen
+              animationEnabled: Platform.OS === 'android' ? false : true, //Problem med animation på Android
               navigationOptions: {
                 tabBarVisible: false
               }
@@ -44,7 +44,6 @@ export default class App extends Component {
         }
       }
     )
-
     return (
       <Provider store={store}>
         <View style={styles.container}>

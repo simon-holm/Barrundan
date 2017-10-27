@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Image, View, Text, ScrollView, Dimensions } from 'react-native'
 import { SocialIcon } from 'react-native-elements'
 
-const SCREEN_WIDTH = Dimensions.get('window').width
-
 class Slides extends Component {
   renderLastSlide(index) {
     if (index === this.props.data.length - 1) {
@@ -19,7 +17,6 @@ class Slides extends Component {
       )
     }
   }
-
   renderSlides() {
     return this.props.data.map((slide, index) => {
       if (index === 0) {
@@ -37,17 +34,6 @@ class Slides extends Component {
                 height: 350
               }}
             />
-            {/*<Text
-              style={{
-                fontSize: 30,
-                color: 'white',
-                marginLeft: 15,
-                marginRight: 15,
-                marginBottom: 10
-              }}
-            >
-              Välkommen!
-            </Text>*/}
             {this.renderLastSlide(index)}
           </View>
         )
@@ -80,7 +66,6 @@ class Slides extends Component {
       )
     })
   }
-
   render() {
     return (
       <ScrollView horizontal pagingEnabled style={{ flex: 1 }}>
@@ -90,6 +75,7 @@ class Slides extends Component {
   }
 }
 
+const SCREEN_WIDTH = Dimensions.get('window').width
 const styles = {
   slideStyle: {
     flex: 1,
