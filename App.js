@@ -12,6 +12,8 @@ import DevScreen from './screens/DevScreen'
 import MainScreen from './screens/MainScreen'
 
 export default class App extends Component {
+  // Renderas först
+  // Sätter upp strukturen för navigationen
   render() {
     const MainNavigator = TabNavigator(
       {

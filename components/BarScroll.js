@@ -40,6 +40,9 @@ class BarScroll extends Component {
     this.props.refresh()
   }
   componentWillReceiveProps(newProps) {
+    /* 
+      Scrollar till rätt slide vid ny "aktiv bar"
+    */
     this.props.bars.map((bar, index) => {
       if (bar._id === newProps.currentBar._id) {
         this.slideToBar(index)
@@ -95,6 +98,9 @@ class BarScroll extends Component {
         pagingEnabled
         indicatorStyle="white"
       >
+        {/* 
+          Renderar dynamiska views bereonde på barernas start- och slutdatum
+        */}
         {this.props.bars.map((bar, index) => {
           if (this.isActive(bar) || (index === 0 && this.isBefore(bar))) {
             return (

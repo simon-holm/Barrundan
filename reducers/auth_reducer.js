@@ -9,6 +9,9 @@ import {
 INITIAL_STATE = {}
 
 export default function(state = INITIAL_STATE, action) {
+  /* 
+    Ändrar olika states beroende på vad som har dispatchats från Redux-authentication-actions
+  */
   switch (action.type) {
     case FACEBOOK_LOGIN_SUCCESS:
       return { ...state, token: action.payload }

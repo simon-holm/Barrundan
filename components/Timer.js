@@ -19,6 +19,9 @@ class Timer extends Component {
     this.startTicker()
   }
   startTicker = () => {
+    /* 
+      Startar en countdown-timer utifrån datum från Parent-komponenten
+    */
     this.ticker = setInterval(() => {
       let now = new Date()
       let target = new Date(this.props.startTime)

@@ -39,6 +39,9 @@ class Mainscreen extends Component {
     refreshing: false
   }
   refresh = async () => {
+    /* 
+      - Uppdaterar appens "barrunda-states" (Redux actions)
+    */
     await this.props.fetchBarrunda()
     await this.props.fetchCurrentBar(this.props.barrunda._id)
     await this.props.fetchParticipants(this.props.barrunda._id)
@@ -57,12 +60,20 @@ class Mainscreen extends Component {
     }
   }
   _onRefresh = () => {
+    /* 
+      - Specifik för "pull-to-resfresh"- funktionen från React Native
+    */
     this.setState({ refreshing: true })
     this.refresh().then(() => {
       this.setState({ refreshing: false })
     })
   }
   async componentWillMount() {
+    /* 
+      Lyssnar på Push notifikationer 
+      Refeshar varje minut
+    */
+
     let pushToken = await AsyncStorage.getItem('pushToken')
     if (pushToken) {
       Notifications.addListener(notification => {
@@ -97,6 +108,9 @@ class Mainscreen extends Component {
     this.setState({ loading: false })
   }
   renderBarinfo() {
+    /* 
+      Dynamisk bar-info beroende på loading och om användaren deltagande
+    */
     if (this.state.loading) {
       return (
         <View style={styles.loadingIcon}>
@@ -146,6 +160,9 @@ class Mainscreen extends Component {
     }
   }
   renderTime = () => {
+    /* 
+      Returnar dynamisk countdown-tid till timern
+    */
     let time
     this.props.barrunda.bars.map((bar, index) => {
       if (bar._id === this.props.currentBar._id) {
@@ -159,6 +176,9 @@ class Mainscreen extends Component {
     return time
   }
   renderSubtitle = () => {
+    /* 
+      Returnar dynamisk subtitle
+    */
     return this.props.barrunda.bars.map((bar, index) => {
       if (bar._id === this.props.currentBar._id) {
         if (index === 0 && this.isBarNotActiveYet(bar)) {
@@ -339,6 +359,9 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ auth, barrunda }) => {
+  /* 
+    Hämtar states från Redux store
+  */
   return {
     fbToken: auth.token,
     jwt: auth.jwt,
@@ -351,6 +374,9 @@ const mapStateToProps = ({ auth, barrunda }) => {
 }
 
 export default connect(mapStateToProps, {
+  /* 
+    Connectar actions från Redux till Props
+  */
   userJoinBarrunda,
   fetchParticipants,
   fetchBarrunda,

@@ -13,6 +13,10 @@ export const CLEAR_BARRUNDA = 'clear_barrunda'
 export const FETCH_CURRENT_BAR = 'fetch_current_bar'
 
 export const fetchBarrunda = () => async dispatch => {
+  /* 
+    Kallar på Barrunda API för att hämta akutell barrunda
+    Vid success så dispatchas en action till Redux reducern med data från resultatet
+  */
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
@@ -40,6 +44,10 @@ export const fetchBarrunda = () => async dispatch => {
 }
 
 export const userJoinBarrunda = (userId, barrundaId) => async dispatch => {
+  /* 
+    Kallar på Barrunda API för att lägga till en deltagare i barrunda
+    Vid success så dispatchas en action till Redux-reducern och en till en ny Redux-action
+  */
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
@@ -82,6 +90,10 @@ export const userHasNotJoinedBarrunda = () => dispatch => {
 }
 
 export const fetchParticipants = barrundaId => async dispatch => {
+  /* 
+    Kallar på Barrunda API för att hämta alla deltagare för barrunda
+    Vid success så dispatchas en action till Redux reducern med data från resultatet
+  */
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
@@ -116,6 +128,10 @@ export const clearOldBarrunda = () => dispatch => {
 }
 
 export const fetchCurrentBar = barrundaId => async dispatch => {
+  /* 
+    Kallar på Barrunda API för att hämta den akutella baren
+    Vid success så dispatchas en action till Redux reducern med data från resultatet
+  */
   let jwtToken = await AsyncStorage.getItem('jwt')
   if (jwtToken) {
     let result

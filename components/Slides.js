@@ -1,3 +1,7 @@
+// Denna komponent är anpassad för flera slides och är därför kodad utifrån det.
+// Vi hade för avsikt att ha fler slides men för denna version har vi bara en.
+// Därför är denna komponent lite onödigt komplex...
+
 import React, { Component } from 'react'
 import { Image, View, Text, ScrollView, Dimensions } from 'react-native'
 import { SocialIcon } from 'react-native-elements'
@@ -19,49 +23,21 @@ class Slides extends Component {
   }
   renderSlides() {
     return this.props.data.map((slide, index) => {
-      if (index === 0) {
-        return (
-          <View
-            key={slide.text}
-            style={[styles.slideStyle, { backgroundColor: slide.color }]}
-          >
-            <Image
-              resizeMode={'contain'}
-              source={require('../assets/icons/barrundan.png')}
-              style={{
-                width: 350,
-                alignSelf: 'center',
-                height: 350
-              }}
-            />
-            {this.renderLastSlide(index)}
-          </View>
-        )
-      }
       return (
         <View
           key={slide.text}
-          style={[styles.finalSlideStyle, { backgroundColor: slide.color }]}
+          style={[styles.slideStyle, { backgroundColor: slide.color }]}
         >
-          <View style={{ flex: 1, marginTop: 65 }}>
-            <Text style={styles.textStyle}>{slide.text}</Text>
-            <Text style={styles.textStyle}>{slide.text2}</Text>
-            <Text style={styles.textStyle}>{slide.text3}</Text>
-          </View>
-
+          <Image
+            resizeMode={'contain'}
+            source={require('../assets/icons/barrundan.png')}
+            style={{
+              width: 350,
+              alignSelf: 'center',
+              height: 350
+            }}
+          />
           {this.renderLastSlide(index)}
-          <View>
-            <Image
-              resizeMode={'contain'}
-              source={require('../assets/icons/barrundan.png')}
-              style={{
-                width: SCREEN_WIDTH,
-                alignSelf: 'center',
-                height: 250,
-                marginTop: 50
-              }}
-            />
-          </View>
         </View>
       )
     })

@@ -1,4 +1,5 @@
 // Component bara för DEV och tester
+// Används inte i APPEN men användes under utvecklingen
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'

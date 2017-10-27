@@ -1,3 +1,5 @@
+// Anpassad design för google maps view
+
 export const mapStyles = {
   night: [
     {

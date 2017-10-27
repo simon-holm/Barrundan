@@ -20,7 +20,7 @@ class AuthScreen extends Component {
   async onAuthComplete(props) {
     // finns både facebook token och jwt så är vi välkomna in
     // annars måste vi skapa användaren i barrundan API
-    // så vi kollar först om ett JWT token finns
+    // så vi kollar först om ett JWT token saknas
 
     if (props.token && !props.jwt) {
       console.log('Calling barrundanCreateUser')
@@ -39,9 +39,15 @@ class AuthScreen extends Component {
 }
 
 function mapStateToProps({ auth }) {
+  /* 
+    Hämtar states från Redux store
+  */
   return { token: auth.token, jwt: auth.jwt, user: auth.user }
 }
 export default connect(mapStateToProps, {
+  /* 
+    Connectar actions från Redux till Props
+  */
   facebookLogin,
   barrundanCreateUser,
   removeToken,

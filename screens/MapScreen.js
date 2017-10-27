@@ -24,11 +24,17 @@ class MapScreen extends Component {
     }
   }
   componentDidMount() {
+    /* 
+      Sätter kartans location utifrån den aktiva baren
+    */
+
+    // Emulator specifikt
     if (Platform.OS === 'android' && !Constants.isDevice) {
       console.log('error')
     } else {
       this._getLocationAsync()
     }
+
     this.setState({
       mapLoaded: true,
       region: {
@@ -40,29 +46,37 @@ class MapScreen extends Component {
     })
   }
   _getLocationAsync = async () => {
+    /* 
+      Frågar efter användarens plats
+    */
     let { status } = await Permissions.askAsync(Permissions.LOCATION)
     if (status !== 'granted') {
-      console.log('error')
+      console.log('Location permission not granted')
+    } else {
+      let location = await Location.getCurrentPositionAsync({})
+      let userPosition = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.01125,
+        longitudeDelta: 0.005
+      }
+      this.setState({ userPosition })
     }
-    let location = await Location.getCurrentPositionAsync({})
-    let userPosition = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.01125,
-      longitudeDelta: 0.005
-    }
-    this.setState({ userPosition })
   }
   setRegionToUser() {
+    /* 
+      Centrerar kartan på användarens location
+    */
     if (this.state.userPosition) {
       this.setState({
         region: this.state.userPosition
       })
-    } else {
-      console.log('Vi kan inte visa din plats')
     }
   }
   setRegionToBar() {
+    /* 
+      Centrerar kartan på aktuell bar
+    */
     this.setState({
       region: {
         latitude: this.props.currentBar.location.lat,
@@ -75,7 +89,6 @@ class MapScreen extends Component {
   onRegionChangeComplete = region => {
     this.setState({ region })
   }
-
   render() {
     if (!this.state.mapLoaded) {
       return (
@@ -84,14 +97,12 @@ class MapScreen extends Component {
         </View>
       )
     }
-    const { region } = this.state
-
     return (
       <View style={{ flex: 1 }}>
         <MapView
           style={{ flex: 1 }}
-          initialRegion={region}
-          region={region}
+          initialRegion={this.state.region}
+          region={this.state.region}
           onRegionChangeComplete={this.onRegionChangeComplete}
           customMapStyle={mapStyles.night}
           provider={MapView.PROVIDER_GOOGLE}
@@ -194,6 +205,9 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = ({ auth, barrunda }) => {
+  /* 
+    Hämtar states från Redux store
+  */
   return { token: auth.token, currentBar: barrunda.currentBar }
 }
 

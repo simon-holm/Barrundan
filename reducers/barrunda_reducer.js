@@ -15,6 +15,9 @@ INITIAL_STATE = {
 }
 
 export default function(state = INITIAL_STATE, action) {
+  /* 
+    Ändrar olika states beroende på vad som har dispatchats från Redux-barrunda-actions
+  */
   switch (action.type) {
     case FETCH_PARTICIPANTS:
       return { ...state, participants: action.payload }

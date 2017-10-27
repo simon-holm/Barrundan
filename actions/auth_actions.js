@@ -12,7 +12,6 @@ export const SET_USER = 'set_user'
 import { API_BASE_URL, FB_ID } from '../config/settings'
 
 export const facebookLogin = () => async dispatch => {
-  //Kolla om token finns redan
   let token = await AsyncStorage.getItem('fb_token')
 
   if (token) {
@@ -25,6 +24,10 @@ export const facebookLogin = () => async dispatch => {
 }
 
 const doFacebookLogin = async dispatch => {
+  /* 
+    Kallar på Facebook API med hjälp av Expo-modul
+    Vid success så dispatchas en action till Redux reducern med data från resultatet
+  */
   let { type, token } = await Facebook.logInWithReadPermissionsAsync(FB_ID, {
     permissions: ['public_profile']
   })
@@ -38,13 +41,19 @@ const doFacebookLogin = async dispatch => {
 }
 
 export const removeToken = () => async dispatch => {
+  /* 
+    Rensar tokens
+  */
   await AsyncStorage.removeItem('fb_token')
   await AsyncStorage.removeItem('jwt')
   dispatch({ type: REMOVE_FB_TOKEN })
 }
 
-// Barrundan API SKAPA USER => FÅ JWT
 export const barrundanCreateUser = () => async dispatch => {
+  /* 
+    Kallar på Barrunda API för att skapa en user och få access token
+    Vid success så dispatchas actions till Redux reducern med data från resultatet
+  */
   let fbToken = await AsyncStorage.getItem('fb_token')
   console.log('fb token in barrundanCreateUser', fbToken)
   let result
@@ -77,6 +86,11 @@ export const barrundanCreateUser = () => async dispatch => {
 }
 
 export const registerForPushNotificationsAsync = userId => async dispatch => {
+  /* 
+    Frågar efter tillåtelse för att skicka push notikationer -->
+    Kallar Barrunda API med det genererade push-tokenet (från Expo) 
+    för att registrera användaren för push notifikationer
+  */
   let previousToken = await AsyncStorage.getItem('pushToken')
 
   if (previousToken) {

@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, { Component } from 'react'
 import { AppLoading, Font } from 'expo'
 import { View, Text, AsyncStorage, BackHandler } from 'react-native'
@@ -10,7 +9,6 @@ const SLIDE_DATA = [{ text: 'logga', color: '#13213a' }]
 
 class WelcomeScreen extends Component {
   state = { isReady: false }
-
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress')
   }
@@ -22,6 +20,9 @@ class WelcomeScreen extends Component {
     this.props.navigation.navigate('auth')
   }
   androidBackButtonSetup = () => {
+    /* 
+      Navigerar alltid till MainScreen på Android "back-button-click"
+    */
     BackHandler.addEventListener('hardwareBackPress', () => {
       if (this.props.navigation.state.key !== 'main') {
         this.props.navigation.navigate('main')
@@ -30,6 +31,9 @@ class WelcomeScreen extends Component {
     })
   }
   finishGettingCache = async () => {
+    /* 
+      Navigeras till MainScreen om man loggat in på appen förut med samma device
+    */
     this.androidBackButtonSetup()
     let token = await AsyncStorage.getItem('fb_token')
     let jwt = await AsyncStorage.getItem('jwt')
