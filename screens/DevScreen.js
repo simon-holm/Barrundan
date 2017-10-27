@@ -1,6 +1,7 @@
+// Component bara för DEV och tester
+
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-// Component bara för DEV och tester
 
 import axios from 'axios'
 import {
@@ -33,7 +34,7 @@ class MapScreen extends Component {
       .get(
         `https://graph.facebook.com/me?fields=id,name,picture&access_token=${token}`
       )
-      .then(response => this.setState({ fbData: response.data }))
+      .then(res => this.setState({ fbData: res.data }))
   }
 
   //BARA TEST TA BORT SEN

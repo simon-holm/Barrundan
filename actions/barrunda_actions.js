@@ -2,6 +2,8 @@ import axios from 'axios'
 import { AsyncStorage, Alert } from 'react-native'
 import { showErrorAlert } from './alert_actions'
 
+import { API_BASE_URL } from '../config/settings'
+
 // Action types
 export const FETCH_PARTICIPANTS = 'fetch_participants'
 export const FETCH_BARRUNDA = 'fetch_barrunda'
@@ -9,8 +11,6 @@ export const USER_JOIN_SUCCESS = 'user_join_success'
 export const USER_JOIN_FAIL = 'user_join_fail'
 export const CLEAR_BARRUNDA = 'clear_barrunda'
 export const FETCH_CURRENT_BAR = 'fetch_current_bar'
-
-import { API_BASE_URL } from '../config/settings'
 
 export const fetchBarrunda = () => async dispatch => {
   let jwtToken = await AsyncStorage.getItem('jwt')
@@ -82,10 +82,7 @@ export const userHasNotJoinedBarrunda = () => dispatch => {
 }
 
 export const fetchParticipants = barrundaId => async dispatch => {
-  console.log('fetch participants')
-
   let jwtToken = await AsyncStorage.getItem('jwt')
-
   if (jwtToken) {
     const authString = 'Bearer ' + jwtToken
     let result
@@ -119,9 +116,7 @@ export const clearOldBarrunda = () => dispatch => {
 }
 
 export const fetchCurrentBar = barrundaId => async dispatch => {
-  console.log('fetch current bar')
   let jwtToken = await AsyncStorage.getItem('jwt')
-
   if (jwtToken) {
     let result
     const authString = 'Bearer ' + jwtToken

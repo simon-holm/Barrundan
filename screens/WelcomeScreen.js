@@ -18,7 +18,6 @@ class WelcomeScreen extends Component {
     // Om man vill hämta något innan appen "startar", t.ex. requira bilder
     // denna funktioner tillåter bara "hämtningr, alltså inte setState eller navigering - Expo"
   }
-
   onSlidesComplete = () => {
     this.props.navigation.navigate('auth')
   }

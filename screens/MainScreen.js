@@ -20,6 +20,7 @@ import Toast, { DURATION } from 'react-native-easy-toast'
 import Timer from '../components/Timer'
 import ParticipantsList from '../components/ParticipantsList'
 import BarScroll from '../components/BarScroll'
+import Finished from '../components/Finished'
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 import {
@@ -62,7 +63,6 @@ class Mainscreen extends Component {
     })
   }
   async componentWillMount() {
-    console.log(this.props)
     let pushToken = await AsyncStorage.getItem('pushToken')
     if (pushToken) {
       Notifications.addListener(notification => {
@@ -202,28 +202,13 @@ class Mainscreen extends Component {
       text,
       textSecond,
       participantList,
-      finishTextWrapper,
-      finishTextFirst,
-      finishTextSecond
+      imageStyleBig,
+      imageStyleSmall
     } = styles
     const imageStyle =
       !this.props.isJoined || this.isBarrundaFinished()
-        ? {
-            width: 350,
-            flex: 1,
-            alignSelf: 'center',
-            height: 250,
-            marginTop: 20,
-            marginBottom: 20
-          }
-        : {
-            width: 200,
-            flex: 1,
-            alignSelf: 'center',
-            height: 130,
-            marginTop: 15,
-            marginBottom: 15
-          }
+        ? imageStyleBig
+        : imageStyleSmall
     return (
       <ScrollView
         style={container}
@@ -241,18 +226,9 @@ class Mainscreen extends Component {
           source={require('../assets/icons/barrundan.png')}
           style={imageStyle}
         />
+
         {this.isBarrundaFinished() ? (
-          <View style={finishTextWrapper}>
-            <Text style={finishTextFirst}>Veckans Barrunda är över</Text>
-            <Text style={finishTextSecond}>
-              Nästa Barrunda öppnar för anmälning
-            </Text>
-            <Text
-              style={[finishTextSecond, { color: '#FF934F', fontSize: 18 }]}
-            >
-              Söndag kl 12:00
-            </Text>
-          </View>
+          <Finished />
         ) : (
           <View>
             {this.props.barrunda ? (
@@ -264,6 +240,7 @@ class Mainscreen extends Component {
                 />
               </View>
             ) : null}
+
             {this.renderBarinfo()}
 
             {this.props.participants.length > 0 ? (
@@ -276,6 +253,7 @@ class Mainscreen extends Component {
             ) : null}
           </View>
         )}
+
         <Toast
           ref="toast"
           style={{
@@ -313,6 +291,22 @@ const styles = StyleSheet.create({
     fontSize: 32,
     alignSelf: 'center'
   },
+  imageStyleBig: {
+    width: 350,
+    flex: 1,
+    alignSelf: 'center',
+    height: 250,
+    marginTop: 20,
+    marginBottom: 20
+  },
+  imageStyleSmall: {
+    width: 200,
+    flex: 1,
+    alignSelf: 'center',
+    height: 130,
+    marginTop: 15,
+    marginBottom: 15
+  },
   text: {
     color: '#dddddd',
     fontSize: 20,
@@ -341,20 +335,6 @@ const styles = StyleSheet.create({
   participantList: {
     marginTop: 5,
     alignItems: 'center'
-  },
-  finishTextWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  finishTextFirst: {
-    color: '#dddddd',
-    fontSize: 25,
-    marginBottom: 20
-  },
-  finishTextSecond: {
-    color: '#dddddd',
-    fontSize: 16
   }
 })
 

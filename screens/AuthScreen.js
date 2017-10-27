@@ -33,7 +33,6 @@ class AuthScreen extends Component {
       this.onAuthComplete(props)
     }
   }
-
   render() {
     return <View />
   }
@@ -42,7 +41,6 @@ class AuthScreen extends Component {
 function mapStateToProps({ auth }) {
   return { token: auth.token, jwt: auth.jwt, user: auth.user }
 }
-
 export default connect(mapStateToProps, {
   facebookLogin,
   barrundanCreateUser,

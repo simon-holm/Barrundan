@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, View, StyleSheet, Dimensions } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
-const SCREEN_WIDTH = Dimensions.get('window').width
 
 class BarScroll extends Component {
   isActive(bar) {
@@ -66,7 +65,6 @@ class BarScroll extends Component {
       )
     }
   }
-
   showLeftIcon = index => {
     if (index !== 0) {
       return (
@@ -86,7 +84,6 @@ class BarScroll extends Component {
       )
     }
   }
-
   render() {
     return (
       <ScrollView
@@ -178,6 +175,7 @@ class BarScroll extends Component {
   }
 }
 
+const SCREEN_WIDTH = Dimensions.get('window').width
 const styles = StyleSheet.create({
   container: {
     flex: 1

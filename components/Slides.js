@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Image, View, Text, ScrollView, Dimensions } from 'react-native'
 import { SocialIcon } from 'react-native-elements'
 
-const SCREEN_WIDTH = Dimensions.get('window').width
-
 class Slides extends Component {
   renderLastSlide(index) {
     if (index === this.props.data.length - 1) {
@@ -68,7 +66,6 @@ class Slides extends Component {
       )
     })
   }
-
   render() {
     return (
       <ScrollView horizontal pagingEnabled style={{ flex: 1 }}>
@@ -78,6 +75,7 @@ class Slides extends Component {
   }
 }
 
+const SCREEN_WIDTH = Dimensions.get('window').width
 const styles = {
   slideStyle: {
     flex: 1,

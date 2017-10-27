@@ -23,14 +23,12 @@ class MapScreen extends Component {
       longitudeDelta: 0.005 // standard 0.04
     }
   }
-
   componentDidMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       console.log('error')
     } else {
       this._getLocationAsync()
     }
-
     this.setState({
       mapLoaded: true,
       region: {
@@ -46,7 +44,6 @@ class MapScreen extends Component {
     if (status !== 'granted') {
       console.log('error')
     }
-
     let location = await Location.getCurrentPositionAsync({})
     let userPosition = {
       latitude: location.coords.latitude,
@@ -171,7 +168,6 @@ class MapScreen extends Component {
 }
 
 const { height, width } = Dimensions.get('window')
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
