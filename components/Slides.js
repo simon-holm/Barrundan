@@ -19,7 +19,6 @@ class Slides extends Component {
       )
     }
   }
-
   renderSlides() {
     return this.props.data.map((slide, index) => {
       if (index === 0) {
@@ -37,17 +36,6 @@ class Slides extends Component {
                 height: 350
               }}
             />
-            {/*<Text
-              style={{
-                fontSize: 30,
-                color: 'white',
-                marginLeft: 15,
-                marginRight: 15,
-                marginBottom: 10
-              }}
-            >
-              Välkommen!
-            </Text>*/}
             {this.renderLastSlide(index)}
           </View>
         )

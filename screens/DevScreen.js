@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+// Component bara för DEV och tester
+
 import axios from 'axios'
 import {
   AsyncStorage,

@@ -57,7 +57,6 @@ class MapScreen extends Component {
     this.setState({ userPosition })
   }
   setRegionToUser() {
-    console.log(this.state.userPosition)
     if (this.state.userPosition) {
       this.setState({
         region: this.state.userPosition
@@ -98,6 +97,7 @@ class MapScreen extends Component {
           region={region}
           onRegionChangeComplete={this.onRegionChangeComplete}
           customMapStyle={mapStyles.night}
+          provider={MapView.PROVIDER_GOOGLE}
         >
           <MapView.Marker
             image={require('../assets/icons/barLocation.png')}

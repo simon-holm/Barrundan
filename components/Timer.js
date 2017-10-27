@@ -52,7 +52,6 @@ class Timer extends Component {
         }
       }
     }, 1000)
-    //this.setState({ loading: false })
   }
   componentWillUnmount() {
     clearInterval(this.ticker)

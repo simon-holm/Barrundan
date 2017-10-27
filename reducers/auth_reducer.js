@@ -20,7 +20,7 @@ export default function(state = INITIAL_STATE, action) {
       return { ...state, jwt: action.payload }
     case SET_USER:
       return { ...state, user: action.payload }
-default:
-return state
-}
+    default:
+      return state
+  }
 }

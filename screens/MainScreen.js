@@ -81,14 +81,11 @@ class Mainscreen extends Component {
       await this.refresh()
     }, 60000)
   }
-
   componentWillUnmount() {
     clearInterval(this.refreshInterval)
   }
-
   newBarStarts = () => {
-    // Barrundan startar / ny bar - Göra något nice här?!
-    this.refs.toast.show("Let's Go!", 3000)
+    this.refs.toast.show("Let's Go!", 1500)
     this.refresh()
   }
   onUserJoinBarrunda = async () => {
@@ -188,7 +185,9 @@ class Mainscreen extends Component {
   }
   isBarrundaFinished() {
     if (this.props.barrunda) {
-      const endTime = new Date(this.props.barrunda.bars[3].endTime)
+      const endTime = new Date(
+        this.props.barrunda.bars[this.props.barrunda.bars.length - 1].endTime
+      )
       const now = new Date()
       if (now > endTime) {
         return true
@@ -275,34 +274,15 @@ class Mainscreen extends Component {
                 <ParticipantsList participants={this.props.participants} />
               </View>
             ) : null}
-            <View style={{ marginTop: 15 }}>
-              <Button title="Toast" onPress={() => this.newBarStarts()} />
-            </View>
           </View>
-        )
-
-        /* 
-        <View style={{ marginTop: 15 }}>
-          <Button
-            title="DEV SCREEN"
-            onPress={() => this.props.navigation.navigate('dev')}
-          />
-        </View>
-        <View style={{ marginTop: 15 }}>
-          <Button
-            title="CLEAR OLD BARRUNDA"
-            onPress={() => this.props.clearOldBarrunda()}
-            style={{ marginTop: 10 }}
-          />
-        </View> */
-        }
+        )}
         <Toast
           ref="toast"
           style={{
-            backgroundColor: 'rgba(255, 147, 79, 1)',
+            backgroundColor: '#13213a',
             width: SCREEN_WIDTH - 45,
             height: 120,
-            borderRadius: 100,
+            borderRadius: 0,
             justifyContent: 'center',
             alignItems: 'center'
           }}
@@ -310,7 +290,11 @@ class Mainscreen extends Component {
           positionValue={165}
           fadeInDuration={700}
           fadeOutDuration={700}
-          textStyle={{ color: '#13213a', fontSize: 45, alignSelf: 'center' }}
+          textStyle={{
+            color: 'rgba(255, 147, 79, 1)',
+            fontSize: 45,
+            alignSelf: 'center'
+          }}
         />
       </ScrollView>
     )
